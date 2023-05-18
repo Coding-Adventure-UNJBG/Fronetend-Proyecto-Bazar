@@ -1,5 +1,5 @@
-import './assets/base.css'
 import "bootstrap/dist/css/bootstrap.min.css";
+import './assets/base.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -12,10 +12,10 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faCartShopping, faCashRegister, faFileContract, faRightFromBracket, faShop, faUserGear, faUserSecret } from '@fortawesome/free-solid-svg-icons'
+import { faCartShopping, faCashRegister, faFileContract, faMagnifyingGlass, faRightFromBracket, faShop, faUserGear, faUserSecret } from '@fortawesome/free-solid-svg-icons'
 
 /* agregar iconos de fontawesome */
-library.add(faUserSecret, faShop, faCartShopping, faCashRegister, faUserGear, faFileContract, faRightFromBracket)
+library.add(faUserSecret, faShop, faCartShopping, faCashRegister, faUserGear, faFileContract, faRightFromBracket, faMagnifyingGlass)
 
 const app = createApp(App)
 

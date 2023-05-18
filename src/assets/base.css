@@ -33,6 +33,7 @@
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
 
+  --text-color-tittle: #4152B3;
   --section-gap: 160px;
 }
 
@@ -60,8 +61,6 @@
 
 body {
   min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
   transition: color 0.5s, background-color 0.5s;
   line-height: 1.6;
   font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
@@ -70,4 +69,23 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.custom-tittle{
+  color: var(--text-color-tittle);
+  font-weight: bold;
+}
+
+.custom-btn-color{
+  color:white;
+  margin: 12px;
+  padding: 10px 20px;
+  background-color: var(--text-color-tittle);
+  border: none;
+}
+
+.dimension-tabla{
+  display: -webkit-box;
+  height: 50%;
+  background-color: gray;
 }
