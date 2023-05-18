@@ -26,40 +26,39 @@
             <button
               class="btn-close"
               type="button"
-              aria-label="Close"
               data-bs-dismiss="offcanvas"
-            ></button>
+            >____________________________________________</button>
           </div>
         <!-- OFF CANVAS MENU LINKS  START-->
         <div
           class="offcanvas-body d-flex flex-column justify-content-between px-0"
         >
           <ul class="navbar-nav fs-5 justify-content-center text-center" data-bs-dismiss="offcanvas">
-            <li class="nav-item p-3">
+            <li class="nav-item p-3 border-menu">
               <RouterLink to="/productos" class="nav-link item-menu">
                 <font-awesome-icon :icon="['fas', 'shop']" />
                 Productos
               </RouterLink>
             </li>
-            <li class="nav-item p-3">
+            <li class="nav-item p-3 border-menu">
               <RouterLink to="/compras" class="nav-link item-menu">
                 <font-awesome-icon :icon="['fas', 'cart-shopping']" />
                 Entradas
               </RouterLink>
             </li>
-            <li class="nav-item p-3">
+            <li class="nav-item p-3 border-menu">
               <RouterLink to="/ventas" class="nav-link item-menu">
                 <font-awesome-icon :icon="['fas', 'cash-register']" />
                 Ventas
               </RouterLink>
             </li>
-            <li class="nav-item p-3">
+            <li class="nav-item p-3 border-menu">
               <RouterLink to="/usuarios" class="nav-link item-menu">
                 <font-awesome-icon :icon="['fas', 'user-gear']" />
                 Usuarios
               </RouterLink>
             </li>
-            <li class="nav-item p-3">
+            <li class="nav-item p-3 border-menu">
               <RouterLink to="/reportes" class="nav-link item-menu">
                 <font-awesome-icon :icon="['fas', 'file-contract']" />
                 Reportes
@@ -111,4 +110,9 @@ nav,
   font-weight: bold;
 }
 
+.border-menu{
+  border-style: solid hidden;
+  border-width: 1px;
+  border-color: white;
+}
 </style>
