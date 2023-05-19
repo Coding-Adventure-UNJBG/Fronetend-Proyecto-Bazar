@@ -1,4 +1,8 @@
+<script setup>
+import Navegacion from '../components/Navegacion.vue'
+</script>
 <template>
+  <Navegacion />
     <div class="productos p-5">
       <h1 class="text-center custom-tittle">Vista de Productos</h1>
       <form class="row g-3">
@@ -100,10 +104,10 @@
     </div>
   </template>
 
-  <style>
-  .productos{
-    box-sizing: border-box;
-    width: 100vw;
-    height: 100vh;
-  }
-  </style>
+<style>
+.productos{
+  box-sizing: border-box;
+  width: 100vw;
+  height: 90vh;
+}
+</style>

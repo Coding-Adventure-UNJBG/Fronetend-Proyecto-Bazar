@@ -1,15 +1,19 @@
+<script setup>
+  import Navegacion from '../components/Navegacion.vue'
+</script>
 <template>
-    <div class="about">
-      <h1>Vista de Ventas de Productos</h1>
-    </div>
-  </template>
+  <Navegacion/>
+  <div class="about">
+    <h1>Vista de Ventas de Productos</h1>
+  </div>
+</template>
 
-  <style>
-  @media (min-width: 1024px) {
-    .about {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-    }
+<style>
+@media (min-width: 1024px) {
+  .about {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
   }
-  </style>
+}
+</style>

@@ -89,3 +89,7 @@ body {
   height: 50%;
   background-color: gray;
 }
+.custom-bg-color{
+  background-color: var(--text-color-tittle);
+  color:white;
+}
