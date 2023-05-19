@@ -29,7 +29,7 @@
 
                   <div class="text-center pt-1 mb-5 pb-1">
                     <!-- <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="button">Iniciar Sesión</button>-->
-                    <router-link to="/productos" tag="button" class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3">Ir a Productos</router-link>
+                    <router-link to="/productos" tag="button" class="btn btn-secondary btn-block fa-lg gradient-custom-2 mb-3">Ir a Productos</router-link>
                   </div>
                   <div class="text-center pt-1 mb-5 pb-1">
                     <a class="text-white" href="#!">¿¿Olvidaste tu contraseña?</a>

@@ -1,5 +1,9 @@
+<script setup>
+import Navegacion from '../components/Navegacion.vue'
+</script>
 <template>
-  <div class="productos p-5">
+  <Navegacion />
+  <div class="ventas p-5">
     <h1 class="text-center custom-tittle">Ventas del Día</h1>
     <form class="row g-3">
       <div class="col-md-10 d-flex justify-content-start align-items-end">
@@ -146,9 +150,16 @@
 </template>
 
 <style>
-.productos{
-  box-sizing: border-box;
-  width: 100vw;
-  height: 100vh;
+@media (min-width: 1024px) {
+  .about {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
 }
+  .ventas{
+    box-sizing: border-box;
+    width: 100vw;
+    height: 90vh;
+  }
 </style>
