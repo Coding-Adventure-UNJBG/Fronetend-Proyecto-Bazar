@@ -1,5 +1,16 @@
 <script setup>
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../store/auth'
 import { RouterLink, RouterView } from 'vue-router'
+
+const authStore = useAuthStore();
+const router = useRouter()
+
+function salirSitema(){
+  authStore.salirCuenta()
+  console.log("Saliendo del sistema...")
+  router.push({ name: 'login'})
+}
 </script>
 
 <template>
@@ -72,7 +83,7 @@ import { RouterLink, RouterView } from 'vue-router'
           <!-- enlaces redes sociales -->
 
           <div class="align-self-center py-3">
-            <button type="button" class="btn btn-danger item-menu">
+            <button type="button" class="btn btn-danger item-menu" @click="salirSitema">
               <font-awesome-icon :icon="['fas', 'right-from-bracket']" />
               CERRAR SESIÓN</button>
           </div>

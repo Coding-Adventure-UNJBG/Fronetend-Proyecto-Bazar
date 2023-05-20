@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import './assets/base.css'
 
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
@@ -18,10 +19,12 @@ import { faCartShopping, faCashRegister, faFileContract, faMagnifyingGlass, faRi
 library.add(faUserSecret, faShop, faCartShopping, faCashRegister, faUserGear, faFileContract, faRightFromBracket, faMagnifyingGlass)
 
 const app = createApp(App)
+const pinia = createPinia()
 
 app.use(router)
 
 app.component('font-awesome-icon', FontAwesomeIcon)
+app.use(pinia)
 app.mount('#app')
 
 import "bootstrap/dist/js/bootstrap.min";
