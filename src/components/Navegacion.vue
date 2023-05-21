@@ -6,6 +6,8 @@ import { RouterLink, RouterView } from 'vue-router'
 const authStore = useAuthStore();
 const router = useRouter()
 
+const NAME_PROYECT = import.meta.env.VITE_NAME_PROYECT
+
 function salirSitema(){
   authStore.salirCuenta()
   console.log("Saliendo del sistema...")
@@ -29,7 +31,7 @@ function salirSitema(){
       </button>
       <!-- NAV TITTLE  -->
       <div class="container text-center">
-        <a href="" class="navbar-brand text-white fw-semibold fs-4">BAZAR "E.S.H.T"</a>
+        <span class="navbar-brand text-white fw-semibold fs-4"> {{ NAME_PROYECT }}</span>
       </div>
       <!-- OFFCANVAS MAIN CONTAINER START -->
       <section

@@ -5,21 +5,46 @@ import { ref } from 'vue'
 
 
 const authStore = useAuthStore();
-const name = ref('')
-const password = ref('')
 const router = useRouter()
+const cuenta = ref('')
+const password = ref('')
+const msg = ref('')
+const respuesta = ref(false)
+const isButtonDisabled = ref(false)
 
 function verificarUser() {
-  const validate = authStore.ingresarCuenta(name.value, password.value)
-  if (validate) {
-    router.push({ name: 'home' })
-    alert("Ingreso exitoso")
-  } else {
-    alert("Contraseña incorrecta")
-  }
-  console.log("El acceso es admin y 123")
-  console.log("Ingreso Exitoso: " + validate)
-  console.log("usuarioss: " + name.value)
+  isButtonDisabled.value = true
+  fetch(import.meta.env.VITE_API_V1+"/usuario/login?cuenta="+cuenta.value,{
+    method: 'GET'
+  })
+  .then(response => response.json() )
+  .then(data => {
+    console.log(data)
+    isButtonDisabled.value = false
+    if(data.error){
+      msg.value = data.error
+      respuesta.value = true
+    } else if (data[0].password != password.value) {
+      console.log(data[0].password + " " + password.value)
+      msg.value = "Contraseña incorrecta"
+      respuesta.value = true
+    } else {
+      authStore.ingresarCuenta(cuenta.value)
+      //console.log("Ingresando al sistema")
+      msg.value = "Ingresando al sistema"
+      respuesta.value = true
+      router.push({ name: 'home' })
+    }
+  })
+  .catch(error => {
+    //console.log({error:"API NOT FOUND"})
+    msg.value="El servidor no responde"
+    respuesta.value = true
+    isButtonDisabled.value = false
+  })
+
+  //console.log(import.meta.env.VITE_NAME_PROYECT)
+  console.log("usuarioss: " + cuenta.value)
   console.log("password: " + password.value)
 }
 </script>
@@ -36,7 +61,7 @@ function verificarUser() {
               <form>
                 <div class="form-group first mb-4">
                   <label class="form-label text-white fw-bold" for="IUserName">Nombre de usuario</label>
-                  <input type="text" id="IUserName" class="form-control" placeholder="Nombre de usuario" v-model="name" />
+                  <input type="text" id="IUserName" class="form-control" placeholder="Nombre de usuario" v-model="cuenta" />
                 </div>
                 <div class="form-group last mb-4">
                   <label class="form-label text-white fw-bold" for="IUserPassword">Contraseña</label>
@@ -45,7 +70,8 @@ function verificarUser() {
                 </div>
 
                 <div class="d-grid gap-2">
-                  <button class="btn btn-primary mb-3" type="button" @click="verificarUser">Iniciar Sesión</button>
+                  <span v-if="respuesta" class="text-black text-center bg-info fw-bold"> {{ msg }}</span>
+                  <button class="btn btn-primary mb-3" type="button" :disabled="isButtonDisabled" @click="verificarUser">Iniciar Sesión</button>
                 </div>
 
                 <div class="text-center mb-5">
@@ -66,7 +92,7 @@ function verificarUser() {
 
             <div class="col-md-10 d-flex justify-content-center">
               <div class="text-center">
-                <img src="../assets/enfermera.png" alt="login form" class="img-fluid" width="400" height="400" />
+                <img src="@/assets/enfermera.png" alt="login form" class="img-fluid" width="400" height="400" />
 
                 <h2 class="text-center"><strong>EQUIPOS DE SEGURIDAD E HIGIENE TACNA</strong></h2>
                 <br><br>
