@@ -85,6 +85,9 @@ function verificarAutenticacion(to, from, next) {
   if (rutaProtegida && !usuarioAutenticado) {
     // Redirigir al usuario a la página de inicio de sesión u otra página adecuada
     next('/login');
+  } else if (!rutaProtegida && usuarioAutenticado) {
+    // El usuario autentificado no debe ingresar a la ruta LOGIN
+    next('/');
   } else {
     // Permitir la navegación a la ruta solicitada
     next();

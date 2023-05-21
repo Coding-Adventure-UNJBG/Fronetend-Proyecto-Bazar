@@ -29,7 +29,8 @@ function verificarUser() {
       msg.value = "Contraseña incorrecta"
       respuesta.value = true
     } else {
-      authStore.ingresarCuenta(cuenta.value)
+      authStore.ingresarCuenta(cuenta.value, data[0].permiso)
+      //console.log(data[0].permiso)
       //console.log("Ingresando al sistema")
       msg.value = "Ingresando al sistema"
       respuesta.value = true

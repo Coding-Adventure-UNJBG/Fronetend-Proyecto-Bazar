@@ -7,6 +7,7 @@ export const useAuthStore = defineStore('auth', {
         return {
             logeado: false,
             userName: '',
+            permisos: {}
         }
     },
     // metodos para recuperar datos del store
@@ -15,9 +16,11 @@ export const useAuthStore = defineStore('auth', {
     },
     // funciones custom para interactuar con el store
     actions: {
-        ingresarCuenta(user) {
+        ingresarCuenta(user, permisosdb) {
             this.logeado = true
             this.userName = user
+            this.permisos = JSON.parse(permisosdb)
+            //console.log(this.permisos.productos)
         },
         salirCuenta(){
             this.logeado = false

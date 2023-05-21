@@ -31,7 +31,7 @@ function salirSitema(){
       </button>
       <!-- NAV TITTLE  -->
       <div class="container text-center">
-        <span class="navbar-brand text-white fw-semibold fs-4"> {{ NAME_PROYECT }}</span>
+        <RouterLink to="/" class="navbar-brand text-white fw-semibold fs-4"> {{ NAME_PROYECT }}</RouterLink>
       </div>
       <!-- OFFCANVAS MAIN CONTAINER START -->
       <section
@@ -51,31 +51,31 @@ function salirSitema(){
           class="offcanvas-body d-flex flex-column justify-content-between px-0"
         >
           <ul class="navbar-nav fs-5 justify-content-center text-center" data-bs-dismiss="offcanvas">
-            <li class="nav-item p-3 border-menu">
+            <li class="nav-item p-3 border-menu" v-if="authStore.permisos.productos">
               <RouterLink to="/productos" class="nav-link item-menu">
                 <font-awesome-icon :icon="['fas', 'shop']" />
                 Productos
               </RouterLink>
             </li>
-            <li class="nav-item p-3 border-menu">
+            <li class="nav-item p-3 border-menu" v-if="authStore.permisos.entradas">
               <RouterLink to="/compras" class="nav-link item-menu">
                 <font-awesome-icon :icon="['fas', 'cart-shopping']" />
                 Entradas
               </RouterLink>
             </li>
-            <li class="nav-item p-3 border-menu">
+            <li class="nav-item p-3 border-menu" v-if="authStore.permisos.ventas">
               <RouterLink to="/ventas" class="nav-link item-menu">
                 <font-awesome-icon :icon="['fas', 'cash-register']" />
                 Ventas
               </RouterLink>
             </li>
-            <li class="nav-item p-3 border-menu">
+            <li class="nav-item p-3 border-menu" v-if="authStore.permisos.usuarios">
               <RouterLink to="/usuarios" class="nav-link item-menu">
                 <font-awesome-icon :icon="['fas', 'user-gear']" />
                 Usuarios
               </RouterLink>
             </li>
-            <li class="nav-item p-3 border-menu">
+            <li class="nav-item p-3 border-menu" v-if="authStore.permisos.reportes">
               <RouterLink to="/reportes" class="nav-link item-menu">
                 <font-awesome-icon :icon="['fas', 'file-contract']" />
                 Reportes
