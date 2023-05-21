@@ -60,7 +60,7 @@ function verificarUser(){
               </div>
               <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
                 <div class="card text-center h-100 w-100">
-                  <img src="../assets/enfermera.png" alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
+                  <img src="../assets/enfermera.png" alt="login form" class=" rounded mx-auto d-block w-75" style="border-radius: 1rem 0 0 1rem;" />
                   <div class="card-body">
                     <h4 class="card-title">EQUPOS DE SEGURIDAD E HIGIENE TACNA</h4>
                     <a href="#" class="btn btn-outline-light"><img alt="Vue logo" class="logo" src="@/assets/facebook.svg" width="45" height="45" /></a>

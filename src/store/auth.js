@@ -28,5 +28,8 @@ export const useAuthStore = defineStore('auth', {
             this.logeado = false
             this.userName = ''
         }
-    }
+    },
+    persist: {
+        storage: sessionStorage, // data in sessionStorage is cleared when the page session ends.
+    },
 })
