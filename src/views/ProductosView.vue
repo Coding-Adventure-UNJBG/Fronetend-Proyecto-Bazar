@@ -1,5 +1,20 @@
 <script setup>
+import { onMounted, ref } from 'vue';
 import Navegacion from '../components/Navegacion.vue'
+
+const dataProductos = ref('')
+
+onMounted(() => {
+  fetch(import.meta.env.VITE_API_V1+"/producto",{
+    method: 'GET'
+  })
+  .then(response => response.json() )
+  .then(data => {
+    console.log(data)
+    dataProductos.value = data
+  })
+})
+
 </script>
 <template>
   <Navegacion />
@@ -18,59 +33,31 @@ import Navegacion from '../components/Navegacion.vue'
         </div>
       </form>
       <div class="col-12 table-responsive dimension-tabla">
-        <table class="table table-bordered h-25">
+        <table class="table table-bordered table-hover h-25">
           <thead>
             <tr class="table-secondary">
               <th scope="col">ID</th>
               <th scope="col">Nombre</th>
               <th scope="col">Marca</th>
-              <th scope="col">Proveedor</th>
+              <th scope="col">Medida</th>
               <th scope="col">Cantidad</th>
               <th scope="col">Unidad</th>
               <th scope="col">Estado</th>
               <th scope="col">Imagen</th>
-              <th scope="col">Comentario</th>
               <th scope="col">Ver</th>
               <th scope="col">Editar</th>
             </tr>
           </thead>
           <tbody>
-            <tr class="table-light">
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>Tests</td>
-              <td>Tests</td>
-              <td>Tests</td>
-              <td>Tests</td>
-              <td>Tests</td>
-              <td>0</td>
-              <td>1</td>
-            </tr>
-            <tr class="table-light">
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>Tests</td>
-              <td>Tests</td>
-              <td>Tests</td>
-              <td>Tests</td>
-              <td>Tests</td>
-              <td>0</td>
-              <td>1</td>
-            </tr>
-            <tr class="table-light">
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>Tests</td>
-              <td>Tests</td>
-              <td>Tests</td>
-              <td>Tests</td>
-              <td>Tests</td>
+            <tr class="table-light" v-for="item in dataProductos" :key="dataProductos.id">
+              <td>{{ item.id_producto }}</td>
+              <td>{{ item.nombre }}</td>
+              <td>{{ item.marca }}</td>
+              <td>{{ item.medida }}</td>
+              <td>{{ item.stock }}</td>
+              <td>{{ item.tipo_unidad }}</td>
+              <td>{{ item.estado }}</td>
+              <td>Imagen</td>
               <td>0</td>
               <td>1</td>
             </tr>
@@ -94,7 +81,7 @@ import Navegacion from '../components/Navegacion.vue'
           </div>
           <div class="col-md-4">
             <div class="input-group mb-3">
-              <span class="input-group-text custom-tittle"> Ingreso Total S/.</span>
+              <span class="input-group-text custom-tittle"> Total de Inversión S/.</span>
               <input type="text" class="form-control text-end"  disabled value="124.10">
             </div>
           </div>
