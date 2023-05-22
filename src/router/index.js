@@ -7,6 +7,7 @@ import ReportesView from '../views/ReportesView.vue'
 import UsuariosView from '../views/UsuariosView.vue'
 import VentasView from '../views/VentasView.vue'
 import LoginView from '../views/LoginView.vue'
+import Error404View from '../views/Error404View.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,7 +35,8 @@ const router = createRouter({
       name: 'compras',
       component: ComprasView,
       meta: {
-        requiredAuh: true
+        requiredAuh: true,
+        requirePermiso: ['compras']
       },
       beforeEnter: verificarAutenticacion
     },
@@ -43,7 +45,8 @@ const router = createRouter({
       name: 'productos',
       component: ProductosView,
       meta: {
-        requiredAuh: true
+        requiredAuh: true,
+        requirePermiso: ['productos']
       },
       beforeEnter: verificarAutenticacion
     },
@@ -52,7 +55,8 @@ const router = createRouter({
       name: 'reportes',
       component: ReportesView,
       meta: {
-        requiredAuh: true
+        requiredAuh: true,
+        requirePermiso: ['reportes']
       },
       beforeEnter: verificarAutenticacion
     },
@@ -61,7 +65,8 @@ const router = createRouter({
       name: 'usuarios',
       component: UsuariosView,
       meta: {
-        requiredAuh: true
+        requiredAuh: true,
+        requirePermiso: ['usuarios']
       },
       beforeEnter: verificarAutenticacion
     },
@@ -70,9 +75,19 @@ const router = createRouter({
       name: 'ventas',
       component: VentasView,
       meta: {
-        requiredAuh: true
+        requiredAuh: true,
+        requirePermiso: ['ventas']
       },
       beforeEnter: verificarAutenticacion
+    },
+    {
+      path: '/:catchAll(.*)',
+      name: 'not-found',
+      component: Error404View,
+      beforeEnter: (to, from, next) => {
+        // Redirigir a la ruta principal
+        next('/');
+      }
     }
   ]
 })
@@ -80,12 +95,17 @@ const router = createRouter({
 function verificarAutenticacion(to, from, next) {
   const authStore = useAuthStore();
   const rutaProtegida = to.matched.some(record => record.meta.requiredAuh);
+  const requiredPermissions = to.meta.requirePermiso;
   const usuarioAutenticado = authStore.getEstado;
+  const usuarioPermisos = authStore.getPermisos;
 
   if (rutaProtegida && !usuarioAutenticado) {
     // Redirigir al usuario a la página de inicio de sesión u otra página adecuada
     next('/login');
-  } else if (!rutaProtegida && usuarioAutenticado) {
+  } else if (rutaProtegida && requiredPermissions && !requiredPermissions.every(permission => authStore.getPermisos[permission])) {
+    // Redirigir a una página de acceso denegado si el usuario no tiene los permisos necesarios
+    next('/');
+  }else if (!rutaProtegida && usuarioAutenticado) {
     // El usuario autentificado no debe ingresar a la ruta LOGIN
     next('/');
   } else {

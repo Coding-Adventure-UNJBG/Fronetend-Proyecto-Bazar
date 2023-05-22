@@ -12,7 +12,8 @@ export const useAuthStore = defineStore('auth', {
     },
     // metodos para recuperar datos del store
     getters: {
-        getEstado: (state) => state.logeado
+        getEstado: (state) => state.logeado,
+        getPermisos: (state) => state.permisos
     },
     // funciones custom para interactuar con el store
     actions: {
