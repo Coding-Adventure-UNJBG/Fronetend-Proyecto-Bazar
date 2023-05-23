@@ -1,7 +1,9 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import Navegacion from '../components/Navegacion.vue'
+import { useRouter } from 'vue-router';
+import Navegacion from '../../components/Navegacion.vue'
 
+const router = useRouter()
 const dataProductos = ref('')
 const databuscarProducto = ref('')
 
@@ -31,6 +33,10 @@ function buscarProducto() {
   })
 }
 
+function nuevoProducto() {
+  router.push({ name: 'productonuevo' })
+}
+
 </script>
 <template>
   <Navegacion />
@@ -45,7 +51,7 @@ function buscarProducto() {
         </div>
         </div>
         <div class="col-md-6 d-flex justify-content-start align-items-end">
-          <button  type="button" class="btn btn-primary custom-btn-color" id="inputbuscar">Nuevo Producto</button>
+          <button  type="button" class="btn btn-primary custom-btn-color" id="inputbuscar" @click="nuevoProducto">Nuevo Producto</button>
         </div>
       </div>
       <div class="col-12 table-responsive dimension-tabla">
@@ -56,8 +62,8 @@ function buscarProducto() {
               <th scope="col">Nombre</th>
               <th scope="col">Marca</th>
               <th scope="col">Medida</th>
-              <th scope="col">Cantidad</th>
               <th scope="col">Unidad</th>
+              <th scope="col">Stock</th>
               <th scope="col">Estado</th>
               <th scope="col">Imagen</th>
               <th scope="col">Ver</th>
@@ -73,8 +79,8 @@ function buscarProducto() {
               <td>{{ item.nombre }}</td>
               <td>{{ item.marca }}</td>
               <td>{{ item.medida }}</td>
-              <td>{{ item.stock }}</td>
               <td>{{ item.tipo_unidad }}</td>
+              <td>{{ item.stock }}</td>
               <td>{{ item.estado }}</td>
               <td>
                 <button type="button" class="btn btn-light">
