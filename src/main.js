@@ -14,10 +14,10 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faCartShopping, faCashRegister, faFileContract, faMagnifyingGlass, faRightFromBracket, faShop, faUserGear, faUserSecret } from '@fortawesome/free-solid-svg-icons'
+import { faCameraRetro, faCartShopping, faCashRegister, faFileContract, faMagnifyingGlass, faRightFromBracket, faShop, faUserGear, faUserSecret } from '@fortawesome/free-solid-svg-icons'
 
 /* agregar iconos de fontawesome */
-library.add(faUserSecret, faShop, faCartShopping, faCashRegister, faUserGear, faFileContract, faRightFromBracket, faMagnifyingGlass)
+library.add(faUserSecret, faShop, faCartShopping, faCashRegister, faUserGear, faFileContract, faRightFromBracket, faMagnifyingGlass, faCameraRetro)
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -30,3 +30,4 @@ app.use(pinia)
 app.mount('#app')
 
 import "bootstrap/dist/js/bootstrap.min";
+import { faImages } from "@fortawesome/free-regular-svg-icons";

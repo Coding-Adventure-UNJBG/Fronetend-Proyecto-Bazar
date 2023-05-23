@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import Navegacion from '../components/Navegacion.vue'
 
 const dataProductos = ref('')
+const databuscarProducto = ref('')
 
 onMounted(() => {
   fetch(import.meta.env.VITE_API_V1+"/producto",{
@@ -15,23 +16,38 @@ onMounted(() => {
   })
 })
 
+function buscarProducto() {
+  //console.log("Buscar Producto")
+  fetch(import.meta.env.VITE_API_V1+`/producto?nombre=${databuscarProducto.value}`,{
+    method: 'GET'
+  })
+  .then(response => response.json() )
+  .then(data => {
+    console.log(data)
+    if(data.hasOwnProperty("error")){
+      dataProductos.value = ''
+    } else
+      dataProductos.value = data
+  })
+}
+
 </script>
 <template>
   <Navegacion />
     <div class="productos p-5">
       <h1 class="text-center custom-tittle">Vista de Productos</h1>
-      <form class="row g-3">
+      <div class="row g-3">
         <div class="col-md-5">
           <label for="inputbuscar" class="form-label custom-tittle">Buscar Producto</label>
           <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Ingrese el nombre para buscar..." >
-          <button class="btn btn-secondary" type="button" id="inputbuscar"><font-awesome-icon :icon="['fas', 'magnifying-glass']" /></button>
+          <input type="text" class="form-control" placeholder="Ingrese el nombre para buscar..." v-model="databuscarProducto" @keypress.enter="buscarProducto">
+          <button class="btn btn-secondary" type="button" id="inputbuscar"  @click="buscarProducto"><font-awesome-icon :icon="['fas', 'magnifying-glass']" /></button>
         </div>
         </div>
         <div class="col-md-6 d-flex justify-content-start align-items-end">
           <button  type="button" class="btn btn-primary custom-btn-color" id="inputbuscar">Nuevo Producto</button>
         </div>
-      </form>
+      </div>
       <div class="col-12 table-responsive dimension-tabla">
         <table class="table table-bordered table-hover h-25">
           <thead>
@@ -49,7 +65,10 @@ onMounted(() => {
             </tr>
           </thead>
           <tbody>
-            <tr class="table-light" v-for="item in dataProductos" :key="dataProductos.id">
+            <tr v-if="dataProductos == ''" class="table-light">
+                <td colspan="100%">No se encontraron datos</td>
+            </tr>
+            <tr v-else class="table-light" v-for="item in dataProductos" :key="dataProductos.id">
               <td>{{ item.id_producto }}</td>
               <td>{{ item.nombre }}</td>
               <td>{{ item.marca }}</td>
@@ -57,9 +76,21 @@ onMounted(() => {
               <td>{{ item.stock }}</td>
               <td>{{ item.tipo_unidad }}</td>
               <td>{{ item.estado }}</td>
-              <td>Imagen</td>
-              <td>0</td>
-              <td>1</td>
+              <td>
+                <button type="button" class="btn btn-light">
+                  <font-awesome-icon :icon="['fas', 'camera-retro']" style="color: #0040ff;" />
+                </button>
+              </td>
+              <td>
+                <button type="button" class="btn btn-light">
+                  <img alt="Vue logo" class="logo" src="@/assets/ojo.svg" width="20" height="20" />
+                </button>
+              </td>
+              <td>
+                <button type="button" class="btn btn-light">
+                  <img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="20" height="20" />
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
