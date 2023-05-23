@@ -46,9 +46,9 @@ function nuevoProducto() {
         <div class="col-md-5">
           <label for="inputbuscar" class="form-label custom-tittle">Buscar Producto</label>
           <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Ingrese el nombre para buscar..." v-model="databuscarProducto" @keypress.enter="buscarProducto">
-          <button class="btn btn-secondary" type="button" id="inputbuscar"  @click="buscarProducto"><font-awesome-icon :icon="['fas', 'magnifying-glass']" /></button>
-        </div>
+            <input type="text" class="form-control" placeholder="Ingrese el nombre para buscar..." v-model="databuscarProducto" @keypress.enter="buscarProducto">
+            <button class="btn btn-secondary" type="button" id="inputbuscar"  @click="buscarProducto"><font-awesome-icon :icon="['fas', 'magnifying-glass']" /></button>
+          </div>
         </div>
         <div class="col-md-6 d-flex justify-content-start align-items-end">
           <button  type="button" class="btn btn-primary custom-btn-color" id="inputbuscar" @click="nuevoProducto">Nuevo Producto</button>
