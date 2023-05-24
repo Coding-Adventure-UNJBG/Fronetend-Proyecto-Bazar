@@ -27,8 +27,7 @@ import { ref } from 'vue'
               </div>
             </div>
             <div class="col-md-9 d-flex justify-content-start align-items-end">
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Nuevo
-                usuario</button>
+              <button type="button" class="btn btn-primary">Nuevo usuario</button>
             </div>
 
           </div>
@@ -59,10 +58,10 @@ import { ref } from 'vue'
                   <td>20/05/2023</td>
                   <td></td>
                   <td>
-                    <a href="#"><img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="20" height="20" /></a>
+                    <a href="#" data-toggle="tooltip" title="Editar"><img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="15" /></a>
                   </td>
                   <td>
-                    <a href="#"><img alt="Vue logo" class="logo" src="@/assets/delete.svg" width="20" height="20" /></a>
+                    <a href="#" data-toggle="tooltip" title="Eliminar"><img alt="Vue logo" class="logo" src="@/assets/delete.svg" width="15" /></a>
                   </td>
                 </tr>
                 <tr class="text-center align-middle">
@@ -74,10 +73,10 @@ import { ref } from 'vue'
                   <td>21/05/2023</td>
                   <td></td>
                   <td>
-                    <a href="#"><img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="20" height="20" /></a>
+                    <a href="#"><img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="15" /></a>
                   </td>
                   <td>
-                    <a href="#"><img alt="Vue logo" class="logo" src="@/assets/delete.svg" width="20" height="20" /></a>
+                    <a href="#"><img alt="Vue logo" class="logo" src="@/assets/delete.svg" width="15" /></a>
                   </td>
                 </tr>
                 <tr class="text-center align-middle">
@@ -89,10 +88,10 @@ import { ref } from 'vue'
                   <td>10/05/2023</td>
                   <td></td>
                   <td>
-                    <a href="#"><img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="20" height="20" /></a>
+                    <a href="#" ><img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="15" /></a>
                   </td>
                   <td>
-                    <a href="#"><img alt="Vue logo" class="logo" src="@/assets/delete.svg" width="20" height="20" /></a>
+                    <a href="#"><img alt="Vue logo" class="logo" src="@/assets/delete.svg" width="15" /></a>
                   </td>
                 </tr>
 
