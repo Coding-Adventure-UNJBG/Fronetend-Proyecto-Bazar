@@ -37,7 +37,7 @@ const router = createRouter({
       component: ComprasView,
       meta: {
         requiredAuh: true,
-        requirePermiso: ['compras']
+        requirePermiso: ['entradas']
       },
       beforeEnter: verificarAutenticacion
     },
