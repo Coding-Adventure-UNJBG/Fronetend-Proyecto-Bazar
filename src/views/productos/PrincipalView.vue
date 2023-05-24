@@ -70,7 +70,7 @@ function nuevoProducto() {
         <!-- Fin cabezera -->
         <!-- Cuerpo card -->
         <div class="card-body">
-          <div class="table-responsive">
+          <div class="table-responsive" style="height: 30rem;">
             <!-- Tabla productos -->
             <table class="table table-bordered" width="100%" cellspacing="0">
               <thead>

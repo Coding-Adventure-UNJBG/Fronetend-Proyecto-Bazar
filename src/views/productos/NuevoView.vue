@@ -1,12 +1,86 @@
 <script setup>
   import Navegacion from '../../components/Navegacion.vue'
   import { ref } from 'vue'
+import { useRouter } from 'vue-router';
 
+  const router = useRouter()
+  const isButtonDisabled = ref(false)
   const imagen = ref('/src/assets/test.png')
+  const fileInput = ref('')
+  const msg = ref('')
+  const datosProducto = ref({"nombre":"","medida":"","marca":"","tipo_unidad":1,"cantidad_unidad":1,"foto":""})
 
   function filechange(archivo) {
-    const file = archivo.target.files[0]
-    imagen.value = URL.createObjectURL(file)
+    fileInput.value = archivo.target.files[0]
+    imagen.value = URL.createObjectURL(fileInput.value)
+    console.log(fileInput.value)
+  }
+  function cancelar(){
+    router.push({ name: 'productos' })
+  }
+
+  async function guardarProductos() {
+    isButtonDisabled.value = true
+    const unixTimestamp = Date.now();
+    //console.log(unixTimestamp)
+    if(fileInput.value){// solo guardaremos una imagen si el usuario intenta cargar una
+      console.log(fileInput.value.type.split('/').pop() )
+      datosProducto.value.foto = fileInput.value.type.split('/').pop()
+      datosProducto.value.foto = `${import.meta.env.VITE_API_V1}/photos/op-producto-${unixTimestamp}.${datosProducto.value.foto}`
+      await guardarImagen(unixTimestamp)
+    }
+
+    console.log(datosProducto.value)
+    await guardarDatos()
+    isButtonDisabled.value = false
+  }
+
+  async function guardarDatos () {
+    console.log("datos del producto")
+    console.log(JSON.stringify(datosProducto.value))
+    await fetch(import.meta.env.VITE_API_V1+`/producto/`,{
+    method: 'POST',
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: JSON.stringify(datosProducto.value)
+    })
+    .then(response => response.json() )
+    .then(data => {
+      console.log(data)
+      if(data.hasOwnProperty("message")) {
+        msg.value = data.message
+        router.push({ name: 'productos' })
+      } else
+        msg.value = data.error
+    })
+    .catch(error => {
+      msg.value = "Error del servicio al guardar los datos"
+    })
+  }
+
+  async function guardarImagen(unixTimestamp) {
+    console.log("guardando imagen del producto")
+
+    const formData = new FormData();
+    console.log(fileInput.value)
+    formData.append('imagen', fileInput.value);
+
+    console.log(formData)
+    await fetch(import.meta.env.VITE_API_V1+`/producto/imagen?unixTimestamp=${unixTimestamp}`,{
+    method: 'POST',
+    body: formData,
+    })
+    .then(response => response.json() )
+    .then(data => {
+      console.log(data)
+    })
+    .catch((error) => {
+        // Manejar el error de carga de la imagen
+        console.error('Error al cargar la imagen:', error);
+        msg.value = "Error del servicio al guardar los datos"
+    })
+
   }
 </script>
 
@@ -24,18 +98,18 @@
 
                 <div class="form-outline mb-4">
                   <label class="form-label custom-tittle" for="formNombre">Nombre</label>
-                  <input type="text" id="formNombre" class="form-control form-control-lg" />
+                  <input type="text" id="formNombre" class="form-control form-control-lg" v-model="datosProducto.nombre" />
                 </div>
 
                 <div class="form-outline mb-4">
                   <label class="form-label custom-tittle" for="formMarca">Marca</label>
-                  <input type="text" id="formMarca" class="form-control form-control-lg" />
+                  <input type="text" id="formMarca" class="form-control form-control-lg" v-model="datosProducto.marca"/>
                 </div>
 
                 <div class="row mb-4">
                   <div class="col-md-6">
                     <label for="formMedida" class="form-label custom-tittle">Medida</label>
-                  <input type="text" id="formMedida" class="form-control form-control-lg" />
+                  <input type="text" id="formMedida" class="form-control form-control-lg" v-model="datosProducto.medida"/>
                   </div>
                   <div class="col-md-6">
                     <label for="formImg" class="form-label custom-tittle">Imagen del Producto</label>
@@ -46,14 +120,14 @@
                 <div class="row mb-4">
                   <div class="col-md-6">
                     <label for="formUnidad" class="form-label custom-tittle">Tipo Unidad</label>
-                    <select id="formUnidad" class="form-select">
-                      <option selected>Unidad</option>
-                      <option>Paquete</option>
+                    <select id="formUnidad" class="form-select" v-model="datosProducto.tipo_unidad">
+                      <option selected value="0">Unidad</option>
+                      <option value="1">Paquete</option>
                     </select>
                   </div>
                   <div class="col-md-6">
                     <label for="formCantidad" class="form-label custom-tittle">Cantidad x Unidad</label>
-                    <input type="number" class="form-control" id="formCantidad" value="1" min="1" max="350" step="1">
+                    <input type="number" class="form-control" id="formCantidad" min="1" max="350" step="1" v-model="datosProducto.cantidad_unidad">
                   </div>
                 </div>
 
@@ -68,9 +142,13 @@
                   </div>
                 </div>
 
+                <div v-if="msg" class="form-outline mb-4 text-center">
+                  <h5 class="text-black bg-info fw-bold p-2"> {{ msg }}</h5>
+                </div>
+
                 <div class="d-flex justify-content-center pt-3">
-                  <button  type="button" class="btn btn-primary custom-btn-color" id="inputbuscar">Guardar</button>
-                  <button  type="button" class="btn btn-primary custom-btn-color" id="inputbuscar">Cancelar</button>
+                  <button  type="button" class="btn btn-primary custom-btn-color" id="inputbuscar" :disabled="isButtonDisabled" @click="guardarProductos">Guardar</button>
+                  <button  type="button" class="btn btn-primary custom-btn-color" id="inputbuscar" @click="cancelar">Cancelar</button>
                 </div>
 
               </div>
