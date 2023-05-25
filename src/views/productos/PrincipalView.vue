@@ -1,42 +1,77 @@
-<script setup>
+<script >
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import Modal from '../../components/ModalImagen.vue'
 import Navegacion from '../../components/Navegacion.vue'
 
-const router = useRouter()
-const dataProductos = ref('')
-const databuscarProducto = ref('')
+export default {
+  components: {
+    Modal,
+    Navegacion
+  },
+  setup() {
+    //modal
+    const modalVisible = ref(false);
+    const modalTitle = ref('Título del Modal');
+    const modalData = ref('Imagen del Modal');
+    //principal
+    const router = useRouter()
+    const dataProductos = ref('')
+    const databuscarProducto = ref('')
 
-onMounted(() => {
-  fetch(import.meta.env.VITE_API_V1 + "/producto", {
-    method: 'GET'
-  })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data)
-      dataProductos.value = data
+    const openModal = (nombre, marca, foto) => {
+      modalTitle.value = `${nombre} / ${marca}`
+      if(foto == '')
+        modalData.value = 'http://localhost:3000/photos/test.png'
+      else
+        modalData.value = foto
+      modalVisible.value = true;
+    };
+
+    onMounted(() => {
+      fetch(import.meta.env.VITE_API_V1 + "/producto", {
+        method: 'GET'
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          dataProductos.value = data
+        })
     })
-})
 
-function buscarProducto() {
-  //console.log("Buscar Producto")
-  fetch(import.meta.env.VITE_API_V1 + `/producto?nombre=${databuscarProducto.value}`, {
-    method: 'GET'
-  })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data)
-      if (data.hasOwnProperty("error")) {
-        dataProductos.value = ''
-      } else
-        dataProductos.value = data
-    })
+    function buscarProducto() {
+      //console.log("Buscar Producto")
+      fetch(import.meta.env.VITE_API_V1 + `/producto?nombre=${databuscarProducto.value}`, {
+        method: 'GET'
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          if (data.hasOwnProperty("error")) {
+            dataProductos.value = ''
+          } else
+            dataProductos.value = data
+        })
+    }
+
+    function nuevoProducto() {
+      router.push({ name: 'productonuevo' })
+    }
+
+    return {
+      // modal
+      modalVisible,
+      modalTitle,
+      modalData,
+      openModal,
+      //principal
+      dataProductos,
+      databuscarProducto,
+      buscarProducto,
+      nuevoProducto
+    };
+  }
 }
-
-function nuevoProducto() {
-  router.push({ name: 'productonuevo' })
-}
-
 </script>
 <template>
   <Navegacion />
@@ -70,7 +105,7 @@ function nuevoProducto() {
         <!-- Fin cabezera -->
         <!-- Cuerpo card -->
         <div class="card-body">
-          <div class="table-responsive" style="height: 30rem;">
+          <div class="table-responsive" style="height: 25rem;">
             <!-- Tabla productos -->
             <table class="table table-bordered" width="100%" cellspacing="0">
               <thead>
@@ -98,16 +133,19 @@ function nuevoProducto() {
                   <td>{{ item.stock }}</td>
                   <td>{{ item.estado }}</td>
                   <td>
-                    <a href="#" data-toggle="tooltip" title="Subir Archivo"><img alt="Vue logo" class="logo"
-                        src="@/assets/upload.svg" width="15" /></a>
+                    <button @click="openModal(item.nombre, item.marca, item.foto)" class="btn" data-toggle="tooltip" title="ver Imagen">
+                      <font-awesome-icon :icon="['fas', 'camera-retro']" style="color: #0040ff;" />
+                      </button>
                   </td>
                   <td>
-                    <a href="#" data-toggle="tooltip" title="Ver Imagen"><img alt="Vue logo" class="logo"
-                        src="@/assets/ojo.svg" width="15" /></a>
+                    <button class="btn" data-toggle="tooltip" title="Ver Producto">
+                      <img alt="Vue logo" class="logo" src="@/assets/ojo.svg" width="15" />
+                      </button>
                   </td>
                   <td>
-                    <a href="#" data-toggle="tooltip" title="Editar"><img alt="Vue logo" class="logo"
-                        src="@/assets/pencil.svg" width="15" /></a>
+                    <button class="btn" data-toggle="tooltip" title="Editar">
+                      <img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="15" />
+                      </button>
                   </td>
                 </tr>
               </tbody>
@@ -141,6 +179,7 @@ function nuevoProducto() {
       </div>
     </div>
   </div>
+  <Modal :title="modalTitle" :value="modalVisible" :data="modalData" @update:value="modalVisible = $event" />
 </template>
 
 <style scoped>
