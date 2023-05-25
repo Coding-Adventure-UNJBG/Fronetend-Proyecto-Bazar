@@ -58,6 +58,11 @@ export default {
       router.push({ name: 'productonuevo' })
     }
 
+    function verProducto(pId) {
+      router.push({ name: 'productover', params: {id: pId} })
+    }
+
+
     return {
       // modal
       modalVisible,
@@ -68,7 +73,8 @@ export default {
       dataProductos,
       databuscarProducto,
       buscarProducto,
-      nuevoProducto
+      nuevoProducto,
+      verProducto
     };
   }
 }
@@ -138,7 +144,7 @@ export default {
                       </button>
                   </td>
                   <td>
-                    <button class="btn" data-toggle="tooltip" title="Ver Producto">
+                    <button @click="verProducto(item.id_producto)" class="btn" data-toggle="tooltip" title="Ver Producto">
                       <img alt="Vue logo" class="logo" src="@/assets/ojo.svg" width="15" />
                       </button>
                   </td>

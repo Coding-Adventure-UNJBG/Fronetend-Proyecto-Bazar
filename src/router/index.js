@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import ComprasView from '../views/ComprasView.vue'
 import ProductosView from '../views/productos/PrincipalView.vue'
 import ProductoNuevoView from '../views/productos/NuevoView.vue'
+import ProductoVerView from '../views/productos/VerView.vue'
 import ReportesView from '../views/ReportesView.vue'
 import UsuariosView from '../views/UsuariosView.vue'
 import VentasView from '../views/VentasView.vue'
@@ -55,6 +56,16 @@ const router = createRouter({
       path: '/productos/nuevo',
       name: 'productonuevo',
       component: ProductoNuevoView,
+      meta: {
+        requiredAuh: true,
+        requirePermiso: ['productos']
+      },
+      beforeEnter: verificarAutenticacion
+    },
+    {
+      path: '/productos/ver/:id',
+      name: 'productover',
+      component: ProductoVerView,
       meta: {
         requiredAuh: true,
         requirePermiso: ['productos']
