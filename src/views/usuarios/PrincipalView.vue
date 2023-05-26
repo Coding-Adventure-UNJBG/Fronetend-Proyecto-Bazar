@@ -1,8 +1,9 @@
 <script setup>
   import { useRouter, useRoute } from 'vue-router';
   import Navegacion from '../../components/Navegacion.vue'
-import { onMounted, ref } from 'vue';
+  import { onMounted, ref } from 'vue';
 
+  const router = useRouter()
   const dataUsuarios = ref('')
   const databuscar = ref('')
 
@@ -18,19 +19,22 @@ import { onMounted, ref } from 'vue';
   })
 
   function buscarUsuarios() {
-      console.log(databuscar.value)
-      fetch(`${import.meta.env.VITE_API_V1}/usuario?nombre=${databuscar.value}`, {
-        method: 'GET'
+    console.log(databuscar.value)
+    fetch(`${import.meta.env.VITE_API_V1}/usuario?nombre=${databuscar.value}`, {
+      method: 'GET'
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        if (data.hasOwnProperty("error")) {
+          dataUsuarios.value = ''
+        } else
+          dataUsuarios.value = data
       })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data)
-          if (data.hasOwnProperty("error")) {
-            dataUsuarios.value = ''
-          } else
-            dataUsuarios.value = data
-        })
-    }
+  }
+  function nuevoUsuario() {
+    router.push({ name: 'usuarionuevo' })
+  }
 </script>
 
 <template>
@@ -55,7 +59,7 @@ import { onMounted, ref } from 'vue';
               </div>
             </div>
             <div class="col-md-9 d-flex justify-content-start align-items-end">
-              <button type="button" class="btn btn-primary">Nuevo usuario</button>
+              <button type="button" class="btn btn-primary" @click="nuevoUsuario">Nuevo usuario</button>
             </div>
 
           </div>
@@ -89,10 +93,14 @@ import { onMounted, ref } from 'vue';
                   <td>{{ item.fecha_registro }}</td>
                   <td>{{ item.comentario }}</td>
                   <td>
-                    <a href="#" data-toggle="tooltip" title="Editar"><img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="15" /></a>
+                    <button class="btn" data-toggle="tooltip" title="Editar">
+                      <img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="15" />
+                    </button>
                   </td>
                   <td>
-                    <a href="#" data-toggle="tooltip" title="Eliminar"><img alt="Vue logo" class="logo" src="@/assets/delete.svg" width="15" /></a>
+                    <button class="btn" data-toggle="tooltip" title="Deshabilitar">
+                      <img alt="Vue logo" class="logo" src="@/assets/delete.svg" width="15" />
+                    </button>
                   </td>
                 </tr>
 

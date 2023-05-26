@@ -76,11 +76,24 @@ body {
   font-weight: bold;
 }
 
+.custom-tittle2{
+  color: white;
+  font-weight: bold;
+}
+
 .custom-btn-color{
   color:white;
   margin: 12px;
   padding: 10px 20px;
   background-color: var(--text-color-tittle);
+  border: none;
+}
+
+.custom-btn-color2{
+  color:white;
+  margin: 12px;
+  padding: 10px 20px;
+  background-color: #7B96D4;
   border: none;
 }
 
