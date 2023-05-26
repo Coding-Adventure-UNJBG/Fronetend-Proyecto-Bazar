@@ -1,9 +1,37 @@
 <script setup>
-import { useRouter, useRoute } from 'vue-router';
-import Navegacion from '../components/Navegacion.vue'
-import { ref } from 'vue'
-</script>
+  import { useRouter, useRoute } from 'vue-router';
+  import Navegacion from '../../components/Navegacion.vue'
+import { onMounted, ref } from 'vue';
 
+  const dataUsuarios = ref('')
+  const databuscar = ref('')
+
+  onMounted(() => {
+    fetch(`${import.meta.env.VITE_API_V1}/usuario`, {
+      method: 'GET'
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        dataUsuarios.value = data
+      })
+  })
+
+  function buscarUsuarios() {
+      console.log(databuscar.value)
+      fetch(`${import.meta.env.VITE_API_V1}/usuario?nombre=${databuscar.value}`, {
+        method: 'GET'
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          if (data.hasOwnProperty("error")) {
+            dataUsuarios.value = ''
+          } else
+            dataUsuarios.value = data
+        })
+    }
+</script>
 
 <template>
   <Navegacion />
@@ -21,8 +49,8 @@ import { ref } from 'vue'
 
             <div class="col-md-3">
               <div class="input-group">
-                <input type="search" class="form-control input-sm" placeholder="Buscar usuario">
-                <button class="btn btn-primary" type="button" id="inputbuscar"><font-awesome-icon
+                <input type="search" class="form-control input-sm" placeholder="Buscar usuario" @keypress.enter="buscarUsuarios" v-model="databuscar">
+                <button class="btn btn-primary" type="button" id="inputbuscar" @click="buscarUsuarios"><font-awesome-icon
                     :icon="['fas', 'magnifying-glass']" /></button>
               </div>
             </div>
@@ -43,55 +71,28 @@ import { ref } from 'vue'
                   <th width="10.2%" class="fw-bold">CONTRASEÑA</th>
                   <th width="10.2%" class="fw-bold">ROL</th>
                   <th width="10.2%" class="fw-bold">ESTADO</th>
-                  <th width="10.2%" class="fw-bold">FECHA</th>
-                  <th width="35%" class="fw-bold">COMENTARIO</th>
+                  <th width="13.2%" class="fw-bold">INGRESO</th>
+                  <th width="32%" class="fw-bold">COMENTARIO</th>
                   <th width="10%" colspan="2" class="fw-bold">OPCIÓN</th>
                 </tr>
               </thead>
               <tbody>
-                <tr class="text-center align-middle">
-                  <td>1</td>
-                  <td>admin</td>
-                  <td>admin</td>
-                  <td>Administrador</td>
-                  <td>Habilitado</td>
-                  <td>20/05/2023</td>
-                  <td></td>
+                <tr v-if="dataUsuarios == ''" class="table-light">
+                  <td colspan="100%">No se encontraron datos</td>
+                </tr>
+                <tr v-else class="text-center align-middle" v-for="item in dataUsuarios" :key="dataUsuarios.id">
+                  <td>{{ item.id_usuario }}</td>
+                  <td>{{ item.cuenta }}</td>
+                  <td>*******</td>
+                  <td>{{ item.tipo }}</td>
+                  <td>{{ item.estado }}</td>
+                  <td>{{ item.fecha_registro }}</td>
+                  <td>{{ item.comentario }}</td>
                   <td>
                     <a href="#" data-toggle="tooltip" title="Editar"><img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="15" /></a>
                   </td>
                   <td>
                     <a href="#" data-toggle="tooltip" title="Eliminar"><img alt="Vue logo" class="logo" src="@/assets/delete.svg" width="15" /></a>
-                  </td>
-                </tr>
-                <tr class="text-center align-middle">
-                  <td>2</td>
-                  <td>user</td>
-                  <td>123456</td>
-                  <td>Vendedor</td>
-                  <td>Habilitado</td>
-                  <td>21/05/2023</td>
-                  <td></td>
-                  <td>
-                    <a href="#"><img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="15" /></a>
-                  </td>
-                  <td>
-                    <a href="#"><img alt="Vue logo" class="logo" src="@/assets/delete.svg" width="15" /></a>
-                  </td>
-                </tr>
-                <tr class="text-center align-middle">
-                  <td>3</td>
-                  <td>codex</td>
-                  <td>user122</td>
-                  <td>Inventario</td>
-                  <td>Habilitado</td>
-                  <td>10/05/2023</td>
-                  <td></td>
-                  <td>
-                    <a href="#" ><img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="15" /></a>
-                  </td>
-                  <td>
-                    <a href="#"><img alt="Vue logo" class="logo" src="@/assets/delete.svg" width="15" /></a>
                   </td>
                 </tr>
 
