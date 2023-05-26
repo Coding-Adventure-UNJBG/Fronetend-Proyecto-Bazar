@@ -8,15 +8,33 @@
   const databuscar = ref('')
 
   onMounted(() => {
-    fetch(`${import.meta.env.VITE_API_V1}/usuario`, {
+    cargarData();
+  })
+
+  async function cargarData(){
+    await fetch(`${import.meta.env.VITE_API_V1}/usuario`, {
       method: 'GET'
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        dataUsuarios.value = data
-      })
-  })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      dataUsuarios.value = data
+    })
+  }
+
+  async function deshabilitarUsuario(idUser, estado) {
+    await fetch(`${import.meta.env.VITE_API_V1}/usuario/${idUser}`, {
+      method: 'PATCH',
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({"estado":`${estado}`})
+    })
+    .then(response => response.json())
+    .then(data => {
+      cargarData()
+    })
+  }
 
   function buscarUsuarios() {
     console.log(databuscar.value)
@@ -66,7 +84,7 @@
         </div>
 
         <div class="card-body">
-          <div class="table-responsive">
+          <div class="table-responsive"  style="height: 25rem;">
             <table class="table table-bordered" width="100%" cellspacing="0">
               <thead>
                 <tr class="text-center align-middle">
@@ -98,7 +116,7 @@
                     </button>
                   </td>
                   <td>
-                    <button class="btn" data-toggle="tooltip" title="Deshabilitar">
+                    <button class="btn" data-toggle="tooltip" title="Deshabilitar" @click="deshabilitarUsuario(item.id_usuario, 'deshabilitado')">
                       <img alt="Vue logo" class="logo" src="@/assets/delete.svg" width="15" />
                     </button>
                   </td>
