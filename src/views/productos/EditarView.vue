@@ -1,20 +1,60 @@
 <script setup>
   import Navegacion from '../../components/Navegacion.vue'
-  import { ref } from 'vue'
-import { useRouter } from 'vue-router';
+  import { onMounted, ref } from 'vue';
+  import { useRouter, useRoute } from 'vue-router';
 
   const router = useRouter()
+  const params = useRoute()
   const isButtonDisabled = ref(false)
   const imagen = ref('/src/assets/test.png')
   const fileInput = ref('')
   const msg = ref('')
-  const datosProducto = ref({"nombre":"","medida":"","marca":"","tipo_unidad":1,"cantidad_unidad":1,"foto":""})
+  const datosProducto = ref({"id_producto":"0","nombre":"","medida":"","marca":"","tipo_unidad":"","cantidad_unidad":"","foto":""})
+
+  onMounted(() => {
+    cargarData()
+  })
+
+  function cargarData(){
+    const pId = params.params.id;
+    fetch(`${import.meta.env.VITE_API_V1}/producto/${pId}`, {
+      method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.hasOwnProperty("error")) {
+        msg.value = data.error
+      } else {
+        //console.log(data)
+        datosProducto.value = data[0];
+
+        if(datosProducto.value.tipo_unidad == 'unidad')
+          datosProducto.value.tipo_unidad = 0
+        else
+        datosProducto.value.tipo_unidad = 1
+
+        if(datosProducto.value.foto == ''){
+          datosProducto.value.foto = 'http://localhost:3000/photos/test.png';
+          imagen.value = datosProducto.value.foto;
+        } else {
+          imagen.value = datosProducto.value.foto;
+        }
+        msg.value = ''
+      }
+    })
+    .catch(error => {
+        msg.value = "problemas con el servidor"
+      }
+    )
+  }
 
   function filechange(archivo) {
     fileInput.value = archivo.target.files[0]
     imagen.value = URL.createObjectURL(fileInput.value)
     console.log(fileInput.value)
+    console.log(fileInput.value.name.split('.').pop() )
   }
+
   function cancelar(){
     router.push({ name: 'productos' })
   }
@@ -24,22 +64,21 @@ import { useRouter } from 'vue-router';
     const unixTimestamp = Date.now();
     //console.log(unixTimestamp)
     if(fileInput.value){// solo guardaremos una imagen si el usuario intenta cargar una
-      console.log(fileInput.value.type.split('/').pop() )
-      datosProducto.value.foto = fileInput.value.type.split('/').pop()
+      console.log(fileInput.value.name.split('.').pop() )
+      datosProducto.value.foto = fileInput.value.name.split('.').pop()
       datosProducto.value.foto = `${import.meta.env.VITE_API}/photos/op-producto-${unixTimestamp}.${datosProducto.value.foto}`
+      console.log(datosProducto.value.foto)
       await guardarImagen(unixTimestamp)
     }
 
-    console.log(datosProducto.value)
+    //console.log(datosProducto.value)
     await guardarDatos()
     isButtonDisabled.value = false
   }
 
   async function guardarDatos () {
-    console.log("datos del producto")
-    console.log(JSON.stringify(datosProducto.value))
-    await fetch(import.meta.env.VITE_API_V1+`/producto/`,{
-    method: 'POST',
+    await fetch(`${import.meta.env.VITE_API_V1}/producto/${datosProducto.value.id_producto}`,{
+    method: 'PATCH',
     headers: {
       "Content-type": "application/json"
     },
@@ -47,7 +86,7 @@ import { useRouter } from 'vue-router';
     })
     .then(response => response.json() )
     .then(data => {
-      console.log(data)
+      //console.log(data)
       if(data.hasOwnProperty("message")) {
         msg.value = data.message
         router.push({ name: 'productos' })
@@ -60,20 +99,20 @@ import { useRouter } from 'vue-router';
   }
 
   async function guardarImagen(unixTimestamp) {
-    console.log("guardando imagen del producto")
+    //console.log("guardando imagen del producto")
 
     const formData = new FormData();
-    console.log(fileInput.value)
+    //console.log(fileInput.value)
     formData.append('imagen', fileInput.value);
 
-    console.log(formData)
+    //console.log(formData)
     await fetch(import.meta.env.VITE_API_V1+`/producto/imagen?unixTimestamp=${unixTimestamp}`,{
     method: 'POST',
     body: formData,
     })
     .then(response => response.json() )
     .then(data => {
-      console.log(data)
+      //console.log(data)
     })
     .catch((error) => {
         // Manejar el error de carga de la imagen
@@ -94,7 +133,7 @@ import { useRouter } from 'vue-router';
           <div class="row g-0">
             <div class="col-xl-7">
               <div class="card-body p-md-4 text-black">
-                <h3 class="mb-5 text-center custom-tittle">Nuevo Producto</h3>
+                <h3 class="mb-5 text-center custom-tittle">Actualizar Datos del Producto : {{ $route.params.id }}</h3>
 
                 <div class="form-outline mb-4">
                   <label class="form-label custom-tittle" for="formNombre">Nombre</label>
@@ -121,7 +160,7 @@ import { useRouter } from 'vue-router';
                   <div class="col-md-6">
                     <label for="formUnidad" class="form-label custom-tittle">Tipo Unidad</label>
                     <select id="formUnidad" class="form-select" v-model="datosProducto.tipo_unidad">
-                      <option selected value="0">Unidad</option>
+                      <option value="0">Unidad</option>
                       <option value="1">Paquete</option>
                     </select>
                   </div>
@@ -134,11 +173,11 @@ import { useRouter } from 'vue-router';
                 <div class="row mb-4">
                   <div class="col-md-6">
                     <label for="formStock" class="form-label custom-tittle">Stock</label>
-                    <input type="text" class="form-control" id="formStock" value="0" disabled>
+                    <input type="text" class="form-control" id="formStock" v-model="datosProducto.stock" disabled>
                   </div>
                   <div class="col-md-6">
                     <label for="formEstado" class="form-label custom-tittle">Estado</label>
-                    <input type="text" class="form-control" id="formEstado" value="no-disponible" disabled>
+                    <input type="text" class="form-control" id="formEstado" v-model="datosProducto.estado" disabled>
                   </div>
                 </div>
 

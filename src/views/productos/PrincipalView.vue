@@ -62,6 +62,9 @@ export default {
       router.push({ name: 'productover', params: {id: pId} })
     }
 
+    function editarProducto(pId) {
+      router.push({ name: 'productoedit', params: {id: pId} })
+    }
 
     return {
       // modal
@@ -74,7 +77,8 @@ export default {
       databuscarProducto,
       buscarProducto,
       nuevoProducto,
-      verProducto
+      verProducto,
+      editarProducto
     };
   }
 }
@@ -149,7 +153,7 @@ export default {
                       </button>
                   </td>
                   <td>
-                    <button class="btn" data-toggle="tooltip" title="Editar">
+                    <button @click="editarProducto(item.id_producto)" class="btn" data-toggle="tooltip" title="Editar">
                       <img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="15" />
                       </button>
                   </td>
