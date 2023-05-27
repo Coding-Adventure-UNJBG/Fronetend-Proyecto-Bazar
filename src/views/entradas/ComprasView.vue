@@ -18,6 +18,10 @@
   function newCompra(){
     isButtonDisabled.value = false
   }
+
+  function goDetalles(){
+    router.push({ name: 'comprasdetalle' })
+  }
 </script>
 <template>
   <Navegacion/>
@@ -88,7 +92,7 @@
             <textarea class="form-control" id="input08" rows="2" :disabled="isButtonDisabled"></textarea>
           </div>
           <div v-if="isButtonDisabled != true" class="col-12 text-center">
-            <button type="button" class="btn btn-primary btn-lg custom-btn-color" id="inputbuscar" >Generar Registro</button>
+            <button type="button" class="btn btn-primary btn-lg custom-btn-color" id="inputbuscar" @click="goDetalles" >Generar Registro</button>
             <button type="button" class="btn btn-primary btn-lg custom-btn-color" id="inputbuscar" @click="regresar" >Cancelar</button>
           </div>
         </div>

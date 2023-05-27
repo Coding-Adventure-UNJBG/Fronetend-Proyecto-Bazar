@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../store/auth'
 import HomeView from '../views/HomeView.vue'
 import ComprasView from '../views/entradas/ComprasView.vue'
+import ComprasDetalleView from '../views/entradas/ComprasDetalleView.vue'
 import ProveedoresView from '../views/entradas/ProveedoresView.vue'
 import ProductosView from '../views/productos/PrincipalView.vue'
 import ProductoNuevoView from '../views/productos/NuevoView.vue'
@@ -40,6 +41,16 @@ const router = createRouter({
       path: '/compras',
       name: 'compras',
       component: ComprasView,
+      meta: {
+        requiredAuh: true,
+        requirePermiso: ['entradas']
+      },
+      beforeEnter: verificarAutenticacion
+    },
+    {
+      path: '/compras/detalle',
+      name: 'comprasdetalle',
+      component: ComprasDetalleView,
       meta: {
         requiredAuh: true,
         requirePermiso: ['entradas']
