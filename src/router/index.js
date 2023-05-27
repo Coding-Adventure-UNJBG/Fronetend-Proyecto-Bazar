@@ -9,6 +9,7 @@ import ProductoEditarView from '../views/productos/EditarView.vue'
 import ReportesView from '../views/ReportesView.vue'
 import UsuariosView from '../views/usuarios/PrincipalView.vue'
 import UsuariosNuevoView from '../views/usuarios/NuevoView.vue'
+import UsuariosEditarView from '../views/usuarios/EditarView.vue'
 import VentasView from '../views/VentasView.vue'
 import LoginView from '../views/LoginView.vue'
 import Error404View from '../views/Error404View.vue'
@@ -108,6 +109,16 @@ const router = createRouter({
       path: '/usuarios/nuevo',
       name: 'usuarionuevo',
       component: UsuariosNuevoView,
+      meta: {
+        requiredAuh: true,
+        requirePermiso: ['usuarios']
+      },
+      beforeEnter: verificarAutenticacion
+    },
+    {
+      path: '/usuarios/editar/:id',
+      name: 'usuarioeditar',
+      component: UsuariosEditarView,
       meta: {
         requiredAuh: true,
         requirePermiso: ['usuarios']

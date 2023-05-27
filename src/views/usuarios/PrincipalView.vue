@@ -53,6 +53,10 @@
   function nuevoUsuario() {
     router.push({ name: 'usuarionuevo' })
   }
+
+  function editarUsuario(uId) {
+    router.push({ name: 'usuarioeditar', params: {id: uId} })
+  }
 </script>
 
 <template>
@@ -111,7 +115,7 @@
                   <td>{{ item.fecha_registro }}</td>
                   <td>{{ item.comentario }}</td>
                   <td>
-                    <button class="btn" data-toggle="tooltip" title="Editar">
+                    <button class="btn" data-toggle="tooltip" title="Editar" @click="editarUsuario(item.id_usuario)">
                       <img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="15" />
                     </button>
                   </td>
