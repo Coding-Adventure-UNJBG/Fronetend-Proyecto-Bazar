@@ -1,9 +1,44 @@
 <script setup>
   import Navegacion from '../components/Navegacion.vue'
-  import { onMounted, ref } from 'vue';
-  import { useRouter } from 'vue-router';
+  import { ref } from 'vue';import exportFromJSON from 'export-from-json'
 
-  const router = useRouter()
+  const dataProductos = ref("")
+  const dataUsuarios = ref("")
+
+  async function obtenerProductos() {
+    console.log("Obtener datos de los productos")
+    await fetch(`${import.meta.env.VITE_API_V1}/producto`, {
+      method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      dataProductos.value = data
+    })
+
+    const data = dataProductos.value
+    const fileName = 'download'
+    const exportType =  exportFromJSON.types.xls
+
+    exportFromJSON({ data, fileName, exportType })
+  }
+  async function obtenerUsuarios() {
+    console.log("Obtener datos de los productos")
+    await fetch(`${import.meta.env.VITE_API_V1}/usuario`, {
+      method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      dataUsuarios.value = data
+    })
+
+    const data = dataUsuarios.value
+    const fileName = 'download'
+    const exportType =  exportFromJSON.types.xls
+
+    exportFromJSON({ data, fileName, exportType })
+  }
 </script>
 <template>
   <Navegacion />
@@ -29,7 +64,7 @@
                 <h5 class="custom-tittle">Usuarios</h5>
             </div>
             <div class="col-md-8">
-                <button type="button" class="btn btn-primary custom-btn-color" >
+                <button type="button" class="btn btn-primary custom-btn-color" @click="obtenerUsuarios">
                   <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
                   Generar
                 </button>
@@ -38,7 +73,7 @@
                 <h5 class="custom-tittle">Productos</h5>
             </div>
             <div class="col-md-8">
-                <button type="button" class="btn btn-primary custom-btn-color" >
+                <button type="button" class="btn btn-primary custom-btn-color" @click="obtenerProductos">
                   <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
                   Generar
                 </button>
@@ -90,7 +125,7 @@
 /* Ancho al 75% para vista no movil */
 @media (min-width: 769px) {
   .w-personalizado {
-    width: 75%;
+    width: 85%;
   }
 }
 </style>
