@@ -12,7 +12,8 @@ import ReportesView from '../views/ReportesView.vue'
 import UsuariosView from '../views/usuarios/PrincipalView.vue'
 import UsuariosNuevoView from '../views/usuarios/NuevoView.vue'
 import UsuariosEditarView from '../views/usuarios/EditarView.vue'
-import VentasView from '../views/VentasView.vue'
+import VentasView from '../views/ventas/PrincipalView.vue'
+import VentaNuevaView from '../views/ventas/NuevaView.vue'
 import LoginView from '../views/LoginView.vue'
 import Error404View from '../views/Error404View.vue'
 
@@ -151,6 +152,16 @@ const router = createRouter({
       path: '/ventas',
       name: 'ventas',
       component: VentasView,
+      meta: {
+        requiredAuh: true,
+        requirePermiso: ['ventas']
+      },
+      beforeEnter: verificarAutenticacion
+    },
+    {
+      path: '/ventas/nueva',
+      name: 'ventanueva',
+      component: VentaNuevaView,
       meta: {
         requiredAuh: true,
         requirePermiso: ['ventas']

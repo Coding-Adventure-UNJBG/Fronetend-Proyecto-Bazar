@@ -1,5 +1,12 @@
 <script setup>
-import Navegacion from '../components/Navegacion.vue'
+  import { useRouter } from 'vue-router';
+  import Navegacion from '../../components/Navegacion.vue'
+
+  const router = useRouter()
+
+  function nuevaVenta(){
+    router.push({ name: 'ventanueva' })
+  }
 </script>
 <template>
   <Navegacion />
@@ -16,7 +23,7 @@ import Navegacion from '../components/Navegacion.vue'
           <div class="row g-3">
 
             <div class="col-md-9 d-flex justify-content-start align-items-end">
-              <button type="button" class="btn btn-primary">Nueva Venta</button>
+              <button type="button" class="btn btn-primary" @click="nuevaVenta">Nueva Venta</button>
             </div>
 
             <div class="col-md-3">
