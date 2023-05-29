@@ -23,7 +23,7 @@
         datosUsuario.value = data[0];
         //console.log(datosUsuario.value)
         if(datosUsuario.value.estado == "deshabilitado")
-          datosUsuario.value.estado = 0
+          datosUsuario.value.estado = 2
         else
           datosUsuario.value.estado = 1
       })
@@ -150,8 +150,8 @@
                 <div class="form-outline mb-2">
                   <label for="formEstado" class="form-label custom-tittle2">Estado</label>
                     <select id="formEstado" class="form-select" v-model="datosUsuario.estado">
-                      <option selected value="0">Deshabilitado</option>
-                      <option value="1">Habilitado</option>
+                      <option selected value="1">Habilitado</option>
+                      <option value="2">Deshabilitado</option>
                     </select>
                 </div>
 
