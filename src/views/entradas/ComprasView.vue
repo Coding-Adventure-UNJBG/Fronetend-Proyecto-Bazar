@@ -39,15 +39,19 @@
             <label for="input01" class="form-label custom-tittle">Fecha</label>
             <input type="date" class="form-control" id="input01" :disabled="isButtonDisabled">
           </div>
-          <div class="col-md-6">
+          <div class="col-md-3">
+            <label for="input01" class="form-label custom-tittle">Proveedor</label>
+            <div class="input-group">
+              <input type="search" class="form-control input-sm" placeholder="Buscar Proveedor" :disabled="isButtonDisabled">
+              <button class="btn btn-primary" type="button" id="inputbuscar" :disabled="isButtonDisabled">
+                <font-awesome-icon :icon="['fas', 'magnifying-glass']" /></button>
+            </div>
+          </div>
+          <div class="col-md-3">
             <div class="d-flex justify-content-center">
               <button type="button" class="btn btn-primary btn-lg custom-btn-color" id="inputbuscar" @click="newCompra">
                 <font-awesome-icon :icon="['fas', 'circle-plus']" />
                 Agregar Registro
-              </button>
-              <button type="button" class="btn btn-primary btn-lg custom-btn-color" id="inputbuscar" @click="goProveedores" >
-                <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
-                Proveedores
               </button>
             </div>
           </div>

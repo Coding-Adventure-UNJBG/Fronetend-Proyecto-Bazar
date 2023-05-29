@@ -58,6 +58,12 @@ function salirSitema(){
               </RouterLink>
             </li>
             <li class="nav-item p-3 border-menu" v-if="authStore.permisos.entradas">
+              <RouterLink to="/proveedores" class="nav-link item-menu">
+                <font-awesome-icon :icon="['fas', 'truck']" />
+                Proveedores
+              </RouterLink>
+            </li>
+            <li class="nav-item p-3 border-menu" v-if="authStore.permisos.entradas">
               <RouterLink to="/compras" class="nav-link item-menu">
                 <font-awesome-icon :icon="['fas', 'cart-shopping']" />
                 Entradas
