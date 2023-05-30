@@ -6,7 +6,7 @@
   const router = useRouter()
   const isButtonDisabled = ref(false)
   const msg = ref('')
-  const datosUsuario = ref({"id_usuario": "xxx","cuenta": "","password": "","password2": "","rol": "1","dni": "","nombres": "","telefono": "","direccion": "","comentario": "","estado": "0"})
+  const datosUsuario = ref({"id_usuario": "xxx","cuenta": "","password": "","password2": "","rol": "1","dni": "","nombres": "","telefono": "","direccion": "","comentario": "","estado": "1"})
 
   onMounted(() => {
     obtenerIDCuenta()
@@ -188,8 +188,8 @@
                 <div class="form-outline mb-2">
                   <label for="formEstado" class="form-label custom-tittle2">Estado</label>
                     <select id="formEstado" class="form-select" v-model="datosUsuario.estado">
-                      <option selected value="0">Habilitado</option>
-                      <option value="1">Deshabilitado</option>
+                      <option selected value="1">Habilitado</option>
+                      <option value="2">Deshabilitado</option>
                     </select>
                 </div>
 

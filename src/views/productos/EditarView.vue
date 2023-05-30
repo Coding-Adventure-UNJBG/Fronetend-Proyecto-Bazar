@@ -29,7 +29,7 @@
         datosProducto.value = data[0];
 
         if(datosProducto.value.tipo_unidad == 'unidad')
-          datosProducto.value.tipo_unidad = 0
+          datosProducto.value.tipo_unidad = 2
         else
         datosProducto.value.tipo_unidad = 1
 
@@ -160,7 +160,7 @@
                   <div class="col-md-6">
                     <label for="formUnidad" class="form-label custom-tittle">Tipo Unidad</label>
                     <select id="formUnidad" class="form-select" v-model="datosProducto.tipo_unidad">
-                      <option value="0">Unidad</option>
+                      <option value="2">Unidad</option>
                       <option value="1">Paquete</option>
                     </select>
                   </div>

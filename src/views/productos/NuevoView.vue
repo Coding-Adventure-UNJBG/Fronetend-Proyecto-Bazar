@@ -8,7 +8,7 @@ import { useRouter } from 'vue-router';
   const imagen = ref('/src/assets/test.png')
   const fileInput = ref('')
   const msg = ref('')
-  const datosProducto = ref({"nombre":"","medida":"","marca":"","tipo_unidad":1,"cantidad_unidad":1,"foto":""})
+  const datosProducto = ref({"nombre":"","medida":"","marca":"","tipo_unidad":2,"cantidad_unidad":1,"foto":""})
 
   function filechange(archivo) {
     fileInput.value = archivo.target.files[0]
@@ -24,8 +24,8 @@ import { useRouter } from 'vue-router';
     const unixTimestamp = Date.now();
     //console.log(unixTimestamp)
     if(fileInput.value){// solo guardaremos una imagen si el usuario intenta cargar una
-      console.log(fileInput.value.type.split('/').pop() )
-      datosProducto.value.foto = fileInput.value.type.split('/').pop()
+      console.log(fileInput.value.type.split('.').pop() )
+      datosProducto.value.foto = fileInput.value.type.split('.').pop()
       datosProducto.value.foto = `${import.meta.env.VITE_API}/photos/op-producto-${unixTimestamp}.${datosProducto.value.foto}`
       await guardarImagen(unixTimestamp)
     }
@@ -121,7 +121,7 @@ import { useRouter } from 'vue-router';
                   <div class="col-md-6">
                     <label for="formUnidad" class="form-label custom-tittle">Tipo Unidad</label>
                     <select id="formUnidad" class="form-select" v-model="datosProducto.tipo_unidad">
-                      <option selected value="0">Unidad</option>
+                      <option selected value="2">Unidad</option>
                       <option value="1">Paquete</option>
                     </select>
                   </div>
