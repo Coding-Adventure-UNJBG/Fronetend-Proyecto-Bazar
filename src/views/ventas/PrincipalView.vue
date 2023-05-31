@@ -31,7 +31,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text custom-fecha">FECHA</span>
                 </div>
-                <input type="month" class="form-control">
+                <input type="date" class="form-control">
               </div>
             </div>
 
@@ -40,7 +40,7 @@
 
         <div class="card-body">
           <div class="table-responsive">
-            <table class="table table-bordered" width="100%" cellspacing="0">
+            <table class="table table-bordered table-hover" width="100%" cellspacing="0" style="font-size: 14px">
               <thead>
                 <tr class="text-center align-middle">
                   <th width="4%" scope="col" class="fw-bold">N°</th>
@@ -137,6 +137,10 @@
 </template>
 
 <style scoped>
+.table-responsive {
+  max-height: 24rem;
+  overflow-y: auto;
+}
 .input-group-prepend {
   background-color: transparent;
   border-color: transparent;

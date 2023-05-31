@@ -21,7 +21,7 @@ export default {
 
     const openModal = (nombre, marca, foto) => {
       modalTitle.value = `${nombre} / ${marca}`
-      if(foto == '')
+      if (foto == '')
         modalData.value = 'http://localhost:3000/photos/test.png'
       else
         modalData.value = foto
@@ -59,11 +59,11 @@ export default {
     }
 
     function verProducto(pId) {
-      router.push({ name: 'productover', params: {id: pId} })
+      router.push({ name: 'productover', params: { id: pId } })
     }
 
     function editarProducto(pId) {
-      router.push({ name: 'productoedit', params: {id: pId} })
+      router.push({ name: 'productoedit', params: { id: pId } })
     }
 
     return {
@@ -115,9 +115,9 @@ export default {
         <!-- Fin cabezera -->
         <!-- Cuerpo card -->
         <div class="card-body">
-          <div class="table-responsive" style="height: 25rem;">
+          <div class="table-responsive">
             <!-- Tabla productos -->
-            <table class="table table-bordered" width="100%" cellspacing="0">
+            <table class="table table-bordered table-hover" width="100%" cellspacing="0" style="font-size: 14px">
               <thead>
                 <tr class="text-center align-middle">
                   <th width="4%" scope="col" class="fw-bold">N°</th>
@@ -128,6 +128,9 @@ export default {
                   <th width="13%" class="fw-bold">STOCK</th>
                   <th width="13%" class="fw-bold">ESTADO</th>
                   <th width="9%" colspan="3" class="fw-bold">OPCIÓN</th>
+                </tr>
+                <tr>
+                <tr></tr>
                 </tr>
               </thead>
               <tbody>
@@ -143,19 +146,17 @@ export default {
                   <td>{{ item.stock }}</td>
                   <td>{{ item.estado }}</td>
                   <td>
-                    <button @click="openModal(item.nombre, item.marca, item.foto)" class="btn" data-toggle="tooltip" title="ver Imagen">
-                      <font-awesome-icon :icon="['fas', 'camera-retro']" style="color: #0040ff;" />
-                      </button>
+                    <a href="#" data-toggle="tooltip" title="ver Imagen"
+                      @click="openModal(item.nombre, item.marca, item.foto)"><img alt="Vue logo" class="logo"
+                        src="@/assets/image.svg" width="15" /></a>
                   </td>
                   <td>
-                    <button @click="verProducto(item.id_producto)" class="btn" data-toggle="tooltip" title="Ver Producto">
-                      <img alt="Vue logo" class="logo" src="@/assets/ojo.svg" width="15" />
-                      </button>
+                    <a href="#" data-toggle="tooltip" title="Ver Producto" @click="verProducto(item.id_producto)"><img
+                        alt="Vue logo" class="logo" src="@/assets/ojo.svg" width="15" /></a>
                   </td>
                   <td>
-                    <button @click="editarProducto(item.id_producto)" class="btn" data-toggle="tooltip" title="Editar">
-                      <img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="15" />
-                      </button>
+                    <a href="#" data-toggle="tooltip" title="Editar" @click="editarProducto(item.id_producto)"><img
+                        alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="15" /></a>
                   </td>
                 </tr>
               </tbody>
@@ -163,8 +164,12 @@ export default {
             <!-- Fin tabla productos -->
           </div>
           <!-- Vista de totales parte inferior tabla -->
-          <div class="row">
-            <div class="col-md-4 d-flex justify-content-center justify-content-md-start">
+          <div class="row d-flex justify-content-center">
+            <div class="input-group mb-2 mt-3 compact-input justify-content-center">
+              <span class="input-group-text compact-span">Total stock</span>
+              <input type="text" class="form-control text-end" disabled value="50">
+            </div>
+            <!-- <div class="col-md-4 d-flex justify-content-center justify-content-md-start">
               <div class="input-group mb-2 mt-3 compact-input justify-content-start">
                 <span class="input-group-text compact-span">Total de Productos</span>
                 <input type="text" class="form-control text-end" disabled value="124">
@@ -181,7 +186,7 @@ export default {
                 <span class="input-group-text compact-span">Total de Inversion S/.</span>
                 <input type="text" class="form-control text-end" disabled value="1000">
               </div>
-            </div>
+            </div> -->
           </div>
           <!-- Fin vista totales -->
         </div>
@@ -193,6 +198,11 @@ export default {
 </template>
 
 <style scoped>
+.table-responsive {
+  max-height: 21rem;
+  overflow-y: auto;
+}
+
 .compact-input {
   width: 250px;
 }
@@ -223,5 +233,4 @@ export default {
   .w-personalizado {
     width: 75%;
   }
-}
-</style>
+}</style>

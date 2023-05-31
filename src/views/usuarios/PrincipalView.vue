@@ -88,8 +88,9 @@
         </div>
 
         <div class="card-body">
-          <div class="table-responsive"  style="height: 25rem;">
-            <table class="table table-bordered" width="100%" cellspacing="0">
+          <!-- style="height: 25rem;" -->
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover" width="100%" cellspacing="0" style="font-size: 14px">
               <thead>
                 <tr class="text-center align-middle">
                   <th width="4%" scope="col" class="fw-bold">N°</th>
@@ -106,26 +107,23 @@
                 <tr v-if="dataUsuarios == ''" class="table-light">
                   <td colspan="100%">No se encontraron datos</td>
                 </tr>
-                <tr v-else class="text-center align-middle" v-for="item in dataUsuarios" :key="dataUsuarios.id">
-                  <td>{{ item.id_usuario }}</td>
-                  <td>{{ item.cuenta }}</td>
-                  <td>*******</td>
-                  <td>{{ item.tipo }}</td>
-                  <td>{{ item.estado }}</td>
-                  <td>{{ item.fecha_registro }}</td>
-                  <td>{{ item.comentario }}</td>
-                  <td>
-                    <button class="btn" data-toggle="tooltip" title="Editar" @click="editarUsuario(item.id_usuario)">
-                      <img alt="Vue logo" class="logo" src="@/assets/pencil.svg" width="15" />
-                    </button>
+                <tr v-else class="align-middle" v-for="item in dataUsuarios" :key="dataUsuarios.id">
+                  <td class="text-center">{{ item.id_usuario }}</td>
+                  <td class="text-center">{{ item.cuenta }}</td>
+                  <td class="text-center">*******</td>
+                  <td class="text-center">{{ item.tipo }}</td>
+                  <td class="text-center">{{ item.estado }}</td>
+                  <td class="text-center">{{ item.fecha_registro }}</td>
+                  <td class="text-left">{{ item.comentario }}</td>
+                  <td class="text-center">
+                    <a href="#" data-toggle="tooltip" title="Editar" @click="editarUsuario(item.id_usuario)" ><img alt="Vue logo" class="logo"
+                        src="@/assets/pencil.svg" width="15" /></a>
                   </td>
-                  <td>
-                    <button class="btn" data-toggle="tooltip" title="Deshabilitar" @click="deshabilitarUsuario(item.id_usuario, 'deshabilitado')">
-                      <img alt="Vue logo" class="logo" src="@/assets/delete.svg" width="15" />
-                    </button>
+                  <td class="text-center">
+                    <a href="#" data-toggle="tooltip" title="Deshabilitar" @click="deshabilitarUsuario(item.id_usuario, 'deshabilitado')"><img alt="Vue logo" class="logo"
+                        src="@/assets/delete.svg" width="15" /></a>
                   </td>
                 </tr>
-
               </tbody>
             </table>
           </div>
@@ -136,6 +134,11 @@
 </template>
 
 <style scoped>
+.table-responsive {
+  max-height: 24rem;
+  overflow-y: auto;
+}
+
 .custom-tittle {
   margin: 50px
 }
