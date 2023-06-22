@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Oswald:wght@500&display=swap');
+
+:root {
+    --canva_off: rgba(110, 118, 129, 0.4);
+    --main_color-primary: #1783db;
+    --main-color-secondary: #e7f2fd;
+    --color_text-primary: #101e2c;
+    --color_text-secondary: #10132c;
+    --color_text-tertiary: #fff;
+    --text_size-title: 40px;
+    --color-overlay-shadow: 0 0 0 1px #30363d, 0 16px 32px rgba(1, 4, 9, 0.85);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    /* font-family: 'Oswald', sans-serif; */
+}
+
+/* Navegación - START */
+nav,
+.offcanvas {
+    background-color: var(--main_color-primary);
+}
+
+.logo__empresa {
+    font-family: 'Oswald', sans-serif;
+    font-size: 25px;
+    /* padding: 0 15px; */
+}
+
+.sidebar {
+    box-shadow: var(--color-overlay-shadow);
+    background: #11101d;
+    transition: all 0.4s ease;
+    border-radius: 0 12px 12px 0;
+}
+
+.sidebar a {
+    color: var(--color_text-tertiary);
+    text-decoration: none;
+}
+
+.menu-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.menu-content::-webkit-scrollbar {
+    display: none;
+}
+
+.menu-items {
+    padding: 12px;
+    list-style: none;
+    transition: all 0.4s ease;
+}
+
+.item a {
+    padding: 14px;
+    display: inline-block;
+    width: 100%;
+    border-radius: 12px;
+}
+
+.item a:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.offcanvas {
+    --bs-offcanvas-width: 260px;
+}
+
+.bt-close {
+    display: inline-block;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.bt-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Navegación - END */

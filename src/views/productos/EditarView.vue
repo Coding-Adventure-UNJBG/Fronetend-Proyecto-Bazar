@@ -199,7 +199,7 @@
   </div>  
   </template>
 
-  <style>
+  <style scoped>
 
 .image-custom {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
