@@ -110,15 +110,14 @@ function verificarUser() {
 
             <div class="col-md-10 d-flex justify-content-center">
               <div class="text-center">
-                <img src="@/assets/enfermera.png" alt="login form" class="img-fluid" width="400" height="400" />
-
+                <img src="../assets/images/logo/logo-enfermera.png" alt="login form" class="img-fluid" width="400" height="400" />
                 <h2 class="text-center"><strong>EQUIPOS DE SEGURIDAD E HIGIENE TACNA</strong></h2>
                 <br><br>
-                <a href="#" class="btn btn-outline-light"><img alt="Vue logo" class="logo" src="@/assets/facebook.svg"
+                <a href="#" class="btn btn-outline-light"><img src="../assets/icons/social-media/facebook.svg"
                     width="45" height="45" /></a>
-                <a href="#" class="btn btn-outline-light"><img alt="Vue logo" class="logo" src="@/assets/whatsapp.svg"
+                <a href="#" class="btn btn-outline-light"><img src="../assets/icons/social-media/whatsapp.svg"
                     width="45" height="45" /></a>
-                <a href="#" class="btn btn-outline-light"><img alt="Vue logo" class="logo" src="@/assets/gmail.svg"
+                <a href="#" class="btn btn-outline-light"><img src="../assets/icons/social-media/gmail.svg"
                     width="45" height="45" /></a>
               </div>
             </div>
