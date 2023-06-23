@@ -183,7 +183,7 @@ nav,
     margin-top: 20px;
 }
 
-/* Login - END */.table th {
+.table th {
     background: var(--main_color-tertiary);
 }
 
