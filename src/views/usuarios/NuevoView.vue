@@ -125,7 +125,7 @@ async function guardarDatos() {
           <div class="card shadow mb-3">
             <div class="card-body">
               <div class="text__principal">
-                <h1>REGISTRO DE USUARIO</h1>
+                <h2>REGISTRO DE USUARIO</h2>
               </div>
               <div class="row">
                 <div class="col-md-6">

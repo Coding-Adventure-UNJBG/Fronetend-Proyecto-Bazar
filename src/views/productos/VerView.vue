@@ -67,118 +67,95 @@ function anteriorProducto() {
 <template>
   <Navegacion />
 
-  <div class="container-fluid d-flex justify-content-center align-items-center">
-    <div class="w-personalizado mx-auto">
-      <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-      <div class="card shadow" style="margin-bottom: 4%;">
-        <div class="row g-0">
-          <div class="col-xl-7">
-            <div class="card-body">
-              <h3 class="mb-4 mt-4 text-center custom-tittle">Vista de los Datos del Producto: {{ $route.params.id }}
-              </h3>
-              <form>
-                <div class="mb-3">
-                  <label for="formNombre" class="form-label custom-tittle">Nombre</label>
-                  <input type="text" class="form-control" id="formNombre" v-model="dataProductos.nombre" disabled>
+
+  <div class="container__principal">
+    <div class="vista-principal">
+      <div class="container__vista-principal">
+        <div class="col-sm-12">
+          <div class="card shadow mb-3">
+            <div class="row">
+              <div class="col-md-7">
+                <div class="card-body">
+                  <div class="text__principal">
+                    <h2>DETALLES DEL PRODUCTO (#{{ $route.params.id }})</h2>
+                  </div>
+                  <form>
+                    <div class="mb-2">
+                      <label for="formNombre" class="form-label">Nombre</label>
+                      <input type="text" class="form-control" id="formNombre" v-model="dataProductos.nombre" disabled>
+                    </div>
+                    <div class="mb-2">
+                      <label for="formMarca" class="form-label">Marca</label>
+                      <input type="text" class="form-control" id="formMarca" v-model="dataProductos.marca" disabled>
+                    </div>
+                    <div class="mb-2">
+                      <label for="formMedida" class="form-label">Medida</label>
+                      <input type="text" class="form-control" id="formMedida" v-model="dataProductos.medida" disabled>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-2">
+                          <label for="formUnidad" class="form-label">Tipo de unidad</label>
+                          <input type="text" class="form-control" id="formUnidad" v-model="dataProductos.tipo_unidad"
+                            disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-2">
+                          <label for="formCantidad" class="form-label">Cantidad por unidad</label>
+                          <input type="number" class="form-control" id="formCantidad"
+                            v-model="dataProductos.cantidad_unidad" disabled>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-2">
+                          <label for="formStock" class="form-label">Stock</label>
+                          <input type="text" class="form-control" id="formStock" v-model="dataProductos.stock" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-2">
+                          <label for="formEstado" class="form-label">Estado</label>
+                          <input type="text" class="form-control" id="formEstado" v-model="dataProductos.estado" disabled>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div v-if="msg" class="mb-4 text-center">
+                      <h5 class="text-black bg-info fw-bold p-2"> {{ msg }}</h5>
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-3">
+                      <button type="button" class="btn btn-primary mx-2" :disabled="isButtonDisabled"
+                        @click="regresar">Regresar</button>
+                    </div>
+                  </form>
                 </div>
-                <div class="mb-3">
-                  <label for="formMarca" class="form-label custom-tittle">Marca</label>
-                <input type="text" class="form-control" id="formMarca" v-model="dataProductos.marca" disabled>
               </div>
-              <div class="mb-3">
-                  <label for="formMedida" class="form-label custom-tittle">Medida</label>
-                  <input type="text" class="form-control" id="formMedida" v-model="dataProductos.medida" disabled>
-                </div>
+              <div class="col-md-5">
+                <div class="card-body">
+                  <h5 class="mb-4 mt-4 text-center">Imagen del producto</h5>
+                  <div class="image__product">
+                    <img v-bind:src="dataProductos.foto" alt="" class="img-fluid img-thumbnail"/>
+                  </div>
 
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="formUnidad" class="form-label custom-tittle">Tipo de unidad</label>
-                    <input type="text" class="form-control" id="formUnidad" v-model="dataProductos.tipo_unidad" disabled>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="formCantidad" class="form-label custom-tittle">Cantidad por unidad</label>
-                    <input type="text" class="form-control" id="formCantidad" v-model="dataProductos.cantidad_unidad"
-                      disabled>
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="formStock" class="form-label custom-tittle">Stock</label>
-                    <input type="text" class="form-control" id="formStock" v-model="dataProductos.stock" disabled>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="formEstado" class="form-label custom-tittle">Estado</label>
-                    <input type="text" class="form-control" id="formEstado" v-model="dataProductos.estado" disabled>
+                  <div class="d-flex justify-content-center pt-4 mb-2">
+                    <button type="button" class="btn btn-primary me-3" @click="anteriorProducto">
+                      <font-awesome-icon :icon="['fas', 'circle-left']" />&nbsp;&nbsp;Anterior
+                    </button>
+                    <button type="button" class="btn btn-primary" @click="siguienteProducto">
+                      Siguiente&nbsp;
+                      <font-awesome-icon :icon="['fas', 'circle-right']" />
+                    </button>
                   </div>
                 </div>
-
-                <div v-if="msg" class="mb-4 text-center">
-                  <h5 class="text-black bg-info fw-bold p-2"> {{ msg }}</h5>
-                </div>
-
-                <div class="d-flex justify-content-center pt-2 mb-2">
-                  <button type="button" class="btn btn-primary" @click="regresar">Regresar</button>
-                </div>
-              </form>
+              </div>
             </div>
-          </div>
-          <div class="col-xl-5">
-            <div class="card-body">
-              <h3 class="mb-4 mt-4 text-center custom-tittle">Imagen del producto</h3>
-              <div class="d-flex justify-content-center align-content-center">
-                <img v-bind:src="dataProductos.foto" alt="" class="img-fluid img-thumbnail image-custom" />
-
-              </div>
-
-              <div class="d-flex justify-content-center pt-4 mb-2">
-                <div @keydown.left="anteriorProducto" @keydown.right="siguienteProducto">
-                  <button type="button" class="btn btn-primary me-3" @click="anteriorProducto">
-                    <font-awesome-icon :icon="['fas', 'circle-left']" />&nbsp;&nbsp;Anterior
-                  </button>
-                  <button type="button" class="btn btn-primary" @click="siguienteProducto">
-                    Siguiente&nbsp;
-                    <font-awesome-icon :icon="['fas', 'circle-right']" />
-                  </button>
-                </div>
-
-                <!-- <button type="button" class="btn btn-primary me-3" @click="anteriorProducto">
-                    <font-awesome-icon :icon="['fas', 'circle-left']" />&nbsp;&nbsp;Anterior</button>
-                  <button type="button" class="btn btn-primary" @click="siguienteProducto">Siguiente&nbsp;
-                    <font-awesome-icon :icon="['fas', 'circle-right']" /></button> -->
-              </div>
-            </div>
-
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.image-custom {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  transform: translate3d(0, -8px, 0);
-  /* border-color: gray; border: 2rem; border-radius: 2rem;  */
-  border-radius: 2rem;
-  width: 80%;
-}
-
-.custom-text {
-  color: blue;
-  font-weight: bold;
-}
-
-@media (max-width: 768px) {
-  .w-personalizado {
-    width: 100%;
-  }
-}
-
-/* Ancho al 75% para vista no movil */
-@media (min-width: 769px) {
-  .w-personalizado {
-    width: 85%;
-  }
-}
-</style>

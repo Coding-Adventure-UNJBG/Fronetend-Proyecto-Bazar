@@ -158,31 +158,6 @@ export default {
                   </tbody>
                 </table>
               </div>
-
-              <!-- <div class="row d-flex justify-content-center">
-                <div class="input-group mb-2 mt-3 compact-input justify-content-center">
-                  <span class="input-group-text compact-span">Total stock</span>
-                  <input type="text" class="form-control text-end" disabled value="50">
-                </div>
-                <div class="col-md-4 d-flex justify-content-center justify-content-md-start">
-                  <div class="input-group mb-2 mt-3 compact-input justify-content-start">
-                    <span class="input-group-text compact-span">Total de Productos</span>
-                    <input type="text" class="form-control text-end" disabled value="124">
-                  </div>
-                </div>
-                <div class="col-md-4 d-flex justify-content-center">
-                  <div class="input-group mb-2 mt-3 compact-input justify-content-center">
-                    <span class="input-group-text compact-span">Total de Unidades</span>
-                    <input type="text" class="form-control text-end" disabled value="50">
-                  </div>
-                </div>
-                <div class="col-md-4 d-flex justify-content-center justify-content-md-end">
-                  <div class="input-group mb-2 mt-3 compact-input justify-content-end">
-                    <span class="input-group-text compact-span">Total de Inversion S/.</span>
-                    <input type="text" class="form-control text-end" disabled value="1000">
-                  </div>
-                </div>
-              </div> -->
             </div>
           </div>
         </div>
