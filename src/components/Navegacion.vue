@@ -2,136 +2,86 @@
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../store/auth'
 import { RouterLink, RouterView } from 'vue-router'
+// import '../assets/css/styles.css'
 
 const authStore = useAuthStore();
 const router = useRouter()
 
 const NAME_PROYECT = import.meta.env.VITE_NAME_PROYECT
 
-function salirSitema(){
+function salirSitema() {
   authStore.salirCuenta()
   console.log("Saliendo del sistema...")
-  router.push({ name: 'login'})
+  router.push({ name: 'login' })
 }
 </script>
 
 <template>
-    <!-- MENU START  -->
-    <nav class="navbar navbar-dark">
-    <!-- NAV CONTAINER START -->
+  <!-- Menu START -->
+  <nav class="navbar navbar-dark">
+
     <div class="container-fluid">
-      <!-- NAV BUTTON  -->
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#menuLateral"
-      >
+      <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <!-- NAV TITTLE  -->
       <div class="container text-center">
-        <RouterLink to="/" class="navbar-brand text-white fw-semibold fs-4"> {{ NAME_PROYECT }}</RouterLink>
+        <RouterLink to="/" class="navbar-brand logo__empresa"> {{ NAME_PROYECT }}</RouterLink>
       </div>
-      <!-- OFFCANVAS MAIN CONTAINER START -->
-      <section
-        class="offcanvas offcanvas-start custom-menu"
-        id="menuLateral"
-        tabindex="-1"
-      >
-      <div class="offcanvas-header" data-bs-theme="dark">
-            <button
-              class="btn-close"
-              type="button"
-              data-bs-dismiss="offcanvas"
-            >____________________________________________</button>
-          </div>
-        <!-- OFF CANVAS MENU LINKS  START-->
-        <div
-          class="offcanvas-body d-flex flex-column justify-content-between px-0"
-        >
-          <ul class="navbar-nav fs-5 justify-content-center text-center" data-bs-dismiss="offcanvas">
-            <li class="nav-item p-3 border-menu" v-if="authStore.permisos.productos">
-              <RouterLink to="/productos" class="nav-link item-menu">
-                <font-awesome-icon :icon="['fas', 'shop']" />
-                Productos
-              </RouterLink>
-            </li>
-            <li class="nav-item p-3 border-menu" v-if="authStore.permisos.entradas">
-              <RouterLink to="/proveedores" class="nav-link item-menu">
-                <font-awesome-icon :icon="['fas', 'truck']" />
-                Proveedores
-              </RouterLink>
-            </li>
-            <li class="nav-item p-3 border-menu" v-if="authStore.permisos.entradas">
-              <RouterLink to="/compras" class="nav-link item-menu">
-                <font-awesome-icon :icon="['fas', 'cart-shopping']" />
-                Entradas
-              </RouterLink>
-            </li>
-            <li class="nav-item p-3 border-menu" v-if="authStore.permisos.ventas">
-              <RouterLink to="/ventas" class="nav-link item-menu">
-                <font-awesome-icon :icon="['fas', 'cash-register']" />
-                Ventas
-              </RouterLink>
-            </li>
-            <li class="nav-item p-3 border-menu" v-if="authStore.permisos.usuarios">
-              <RouterLink to="/usuarios" class="nav-link item-menu">
-                <font-awesome-icon :icon="['fas', 'user-gear']" />
-                Usuarios
-              </RouterLink>
-            </li>
-            <li class="nav-item p-3 border-menu" v-if="authStore.permisos.reportes">
-              <RouterLink to="/reportes" class="nav-link item-menu">
-                <font-awesome-icon :icon="['fas', 'file-contract']" />
-                Reportes
-              </RouterLink>
-            </li>
-          </ul>
-          <!-- enlaces redes sociales -->
-
-          <div class="align-self-center py-3">
-            <button type="button" class="btn btn-danger item-menu" @click="salirSitema">
-              <font-awesome-icon :icon="['fas', 'right-from-bracket']" />
-              CERRAR SESIÓN</button>
-          </div>
-        </div>
-      </section>
-      <!-- OFFCANVAS MAIN CONTAINER END  -->
     </div>
+
+    <section class="offcanvas offcanvas-start sidebar" id="menuLateral" tabindex="-1">
+      <!-- <div class="offcanvas-header">
+      </div> -->
+
+      <div class="offcanvas-body menu-content">
+        <button type="button" class="btn bt-close ms-auto" data-bs-dismiss="offcanvas">
+          <img src="../assets/icons/close.svg" style="width: 10px;">
+        </button>
+        <ul class="menu-items">
+          <li class="item" v-if="authStore.permisos.productos">
+            <RouterLink to="/productos">
+              <font-awesome-icon :icon="['fas', 'shop']" style="font-size: 15px;" /> Productos
+            </RouterLink>
+          </li>
+          <li class="item">
+            <RouterLink to="/proveedores">
+              <font-awesome-icon :icon="['fas', 'truck']" style="font-size: 15px;" /> Proveedores
+            </RouterLink>
+          </li>
+          <li class="item">
+            <RouterLink to="/compras">
+              <font-awesome-icon :icon="['fas', 'cart-shopping']" style="font-size: 15px;" />
+              Entradas
+            </RouterLink>
+          </li>
+          <li class="item">
+            <RouterLink to="/ventas">
+              <font-awesome-icon :icon="['fas', 'cash-register']" style="font-size: 15px;" />
+              Ventas
+            </RouterLink>
+          </li>
+          <li class="item">
+            <RouterLink to="/usuarios">
+              <font-awesome-icon :icon="['fas', 'user-gear']" style="font-size: 15px;" />
+              Usuarios
+            </RouterLink>
+          </li>
+          <li class="item">
+            <RouterLink to="/reportes">
+              <font-awesome-icon :icon="['fas', 'file-contract']" style="font-size: 15px;" />
+              Reportes
+            </RouterLink>
+          </li>
+        </ul>
+        <div class="align-self-center py-3">
+          <button type="button" class="btn btn-danger item-menu" @click="salirSitema">
+            <font-awesome-icon :icon="['fas', 'right-from-bracket']" />
+            CERRAR SESIÓN</button>
+        </div>
+
+      </div>
+    </section>
   </nav>
+  <!-- Menu END -->
   <RouterView />
 </template>
-
-<style scoped>
-nav,
-.offcanvas {
-  background-color: #4152B3;
-}
-
-.navbar-toggler {
-  border: none;
-}
-
-.navbar-toggler:focus {
-  outline: none;
-  box-shadow: none;
-}
-.custom-menu{
-  background-color: black;
-  font-weight: bold;
-  color: white;
-  margin-top: 55px;
-}
-
-.item-menu{
-  color: #dde3ea;
-  font-weight: bold;
-}
-
-.border-menu{
-  border-style: solid hidden;
-  border-width: 1px;
-  border-color: white;
-}
-</style>

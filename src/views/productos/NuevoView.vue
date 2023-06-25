@@ -87,103 +87,94 @@ async function guardarImagen(unixTimestamp) {
 <template>
   <Navegacion />
 
-  <div class="container-fluid d-flex justify-content-center align-items-center">
-    <div class="w-personalizado mx-auto">
-      <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-      <div class="card shadow" style="margin-bottom: 4%;">
-        <div class="row g-0">
-          <div class="col-xl-7">
-            <div class="card-body">
-              <h3 class="mb-4 mt-4 text-center custom-tittle">Nuevo producto</h3>
-              <form>
-                <div class="mb-3">
-                  <label for="formNombre" class="form-label custom-tittle">Nombre</label>
-                  <input type="text" class="form-control" id="formNombre" v-model="datosProducto.nombre">
-                </div>
-                <div class="mb-3">
-                  <label for="formMarca" class="form-label custom-tittle">Marca</label>
-                  <input type="text" class="form-control" id="formMarca" v-model="datosProducto.marca">
-                </div>
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="formMedida" class="form-label custom-tittle">Medida</label>
-                    <input type="text" class="form-control" id="formMedida" v-model="datosProducto.medida">
+  <div class="container__principal">
+    <div class="vista-principal">
+      <div class="container__vista-principal">
+        <div class="col-sm-12">
+          <div class="card shadow mb-3">
+            <div class="row">
+              <div class="col-md-7">
+                <div class="card-body">
+                  <div class="text__principal">
+                    <h2>NUEVO PRODUCTO</h2>
                   </div>
-                  <div class="col-md-6">
-                    <label for="formImg" class="form-label custom-tittle">Subir imagen</label>
-                    <input type="file" class="form-control" id="formImg" accept=".jpg, .png" @change="filechange">
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="formUnidad" class="form-label custom-tittle">Tipo de unidad</label>
-                    <select class="form-select" id="formUnidad" v-model="datosProducto.tipo_unidad">
-                      <option selected value="2">Unidad</option>
-                      <option value="1">Paquete</option>
-                    </select>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="formCantidad" class="form-label custom-tittle">Cantidad por unidad</label>
-                    <input type="number" class="form-control" id="formCantidad" min="1" max="350" step="1"
-                      v-model="datosProducto.cantidad_unidad">
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="formStock" class="form-label custom-tittle">Stock</label>
-                    <input type="text" class="form-control" id="formStock" value="0" disabled>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="formEstado" class="form-label custom-tittle">Estado</label>
-                    <input type="text" class="form-control" id="formEstado" value="no-disponible" disabled>
-                  </div>
-                </div>
+                  <form>
+                    <div class="mb-2">
+                      <label for="formNombre" class="form-label">Nombre</label>
+                      <input type="text" class="form-control" id="formNombre" v-model="datosProducto.nombre">
+                    </div>
+                    <div class="mb-2">
+                      <label for="formMarca" class="form-label">Marca</label>
+                      <input type="text" class="form-control" id="formMarca" v-model="datosProducto.marca">
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-2">
+                          <label for="formMedida" class="form-label">Medida</label>
+                          <input type="text" class="form-control" id="formMedida" v-model="datosProducto.medida">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-2">
+                          <label for="formImg" class="form-label">Subir imagen</label>
+                          <input type="file" class="form-control" id="formImg" accept=".jpg, .png" @change="filechange">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-2">
+                          <label for="formUnidad" class="form-label">Tipo de unidad</label>
+                          <select class="form-select" id="formUnidad" v-model="datosProducto.tipo_unidad">
+                            <option selected value="2">Unidad</option>
+                            <option value="1">Paquete</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-2">
+                          <label for="formCantidad" class="form-label">Cantidad por unidad</label>
+                          <input type="number" class="form-control" id="formCantidad" min="1" max="350" step="1"
+                            v-model="datosProducto.cantidad_unidad">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-2">
+                          <label for="formStock" class="form-label">Stock</label>
+                          <input type="text" class="form-control" id="formStock" value="0" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-2">
+                          <label for="formEstado" class="form-label">Estado</label>
+                          <input type="text" class="form-control" id="formEstado" value="no-disponible" disabled>
+                        </div>
+                      </div>
+                    </div>
 
-                <div v-if="msg" class="mb-4 text-center">
-                  <h5 class="text-black bg-info fw-bold p-2"> {{ msg }}</h5>
-                </div>
+                    <div v-if="msg" class="mb-4 text-center">
+                      <h5 class="text-black bg-info fw-bold p-2"> {{ msg }}</h5>
+                    </div>
 
-                <div class="d-flex justify-content-center pt-2 mb-2">
-                  <button type="button" class="btn btn-primary me-3" :disabled="isButtonDisabled"
-                    @click="guardarProductos">Guardar</button>
-                  <button type="button" class="btn btn-secondary" @click="cancelar">Cancelar</button>
+                    <div class="d-flex justify-content-center mt-3">
+                      <button type="button" class="btn btn-primary mx-2" :disabled="isButtonDisabled"
+                        @click="guardarProductos">Guardar</button>
+                      <button type="button" class="btn btn-secondary mx-2" @click="cancelar">Cancelar</button>
+                    </div>
+                  </form>
                 </div>
-              </form>
+              </div>
+              <div class="col-md-5">
+                <div class="image__product card-body">
+                  <img v-bind:src="imagen" alt="" class="img-fluid img-thumbnail" />
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="col-xl-5 pt-4 card-body d-flex justify-content-center align-items-center">
-            <img v-bind:src="imagen" alt="" class="img-fluid img-thumbnail image-custom" />
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.image-custom {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  transform: translate3d(0, -8px, 0);
-  /* border-color: gray; border: 2rem; border-radius: 2rem;  */
-  border-radius: 2rem;
-  width: 80%;
-}
-
-.custom-text {
-  color: blue;
-  font-weight: bold;
-}
-
-@media (max-width: 768px) {
-  .w-personalizado {
-    width: 100%;
-  }
-}
-
-/* Ancho al 75% para vista no movil */
-@media (min-width: 769px) {
-  .w-personalizado {
-    width: 85%;
-  }
-}
-</style>
