@@ -205,4 +205,31 @@ nav,
     font-weight: bold;
     border-radius: 0px;
 }
+
 /* PrincipalVentas - END*/
+
+/* Input con icono - START*/
+.input-con-icono{
+    position: relative;
+}
+
+.icon-input{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 15px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.input-con-icono input{
+    padding-right: 40px;
+}
+
+.password-icon {
+    color: #777;
+    font-size: 0.8rem;
+}
+
+/* Input con icono - END*/
+

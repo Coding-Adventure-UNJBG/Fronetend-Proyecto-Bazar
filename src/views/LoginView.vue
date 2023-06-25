@@ -72,17 +72,12 @@ function verificarUser() {
                 <div class="form-group last mb-4">
 
                   <label class="form-label text-login" for="IUserPassword">Contraseña</label>
-                  <div class="input-group">
-                    <div class="input-group mb-0 mt-0">
-                      <input class="form-control" :type="show === true ? 'text' : 'password'" id="IUserPassword"
-                        placeholder="Contraseña" v-model="password" @keypress.enter="verificarUser">
-                      <span class="input-group-text">
-                        <font-awesome-icon :icon="['fas', 'eye']" v-if="show" @click="show = !show"
-                          style="width: 18px;" />
-                        <font-awesome-icon :icon="['fas', 'eye-slash']" v-else @click="show = !show"
-                          style="width: 18px;" />
-                      </span>
-                    </div>
+                  <div class="input-con-icono">
+                    <input :type="show === true ? 'text' : 'password'" id="IUserPassword" placeholder="Contraseña" class="form-control"
+                    v-model="password" @keypress.enter="verificarUser"/>
+                    <span class="icon-input" @click="show = !show">
+                      <font-awesome-icon class="password-icon" :icon="['fas', show ? 'eye' : 'eye-slash']" />
+                    </span>
                   </div>
                 </div>
 
@@ -110,15 +105,16 @@ function verificarUser() {
 
             <div class="col-md-10 d-flex justify-content-center">
               <div class="text-center">
-                <img src="../assets/images/logo/logo-enfermera.png" alt="login form" class="img-fluid" width="400" height="400" />
+                <img src="../assets/images/logo/logo-enfermera.png" alt="login form" class="img-fluid" width="400"
+                  height="400" />
                 <h2 class="text-center"><strong>EQUIPOS DE SEGURIDAD E HIGIENE TACNA</strong></h2>
                 <br><br>
-                <a href="#" class="btn btn-outline-light"><img src="../assets/icons/social-media/facebook.svg"
-                    width="45" height="45" /></a>
-                <a href="#" class="btn btn-outline-light"><img src="../assets/icons/social-media/whatsapp.svg"
-                    width="45" height="45" /></a>
-                <a href="#" class="btn btn-outline-light"><img src="../assets/icons/social-media/gmail.svg"
-                    width="45" height="45" /></a>
+                <a href="#" class="btn btn-outline-light"><img src="../assets/icons/social-media/facebook.svg" width="45"
+                    height="45" /></a>
+                <a href="#" class="btn btn-outline-light"><img src="../assets/icons/social-media/whatsapp.svg" width="45"
+                    height="45" /></a>
+                <a href="#" class="btn btn-outline-light"><img src="../assets/icons/social-media/gmail.svg" width="45"
+                    height="45" /></a>
               </div>
             </div>
           </div>
