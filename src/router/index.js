@@ -3,7 +3,10 @@ import { useAuthStore } from '../store/auth'
 import HomeView from '../views/HomeView.vue'
 import ComprasView from '../views/entradas/ComprasView.vue'
 import ComprasDetalleView from '../views/entradas/ComprasDetalleView.vue'
-import ProveedoresView from '../views/entradas/ProveedoresView.vue'
+// import ProveedoresView from '../views/entradas/ProveedoresView.vue'
+import ProveedoresView from '../views/proveedores/PrincipalView.vue'
+import ProveedorNuevoView from '../views/proveedores/NuevoView.vue'
+import ProveedorEditarView from '../views/proveedores/EditarView.vue'
 import ProductosView from '../views/productos/PrincipalView.vue'
 import ProductoNuevoView from '../views/productos/NuevoView.vue'
 import ProductoVerView from '../views/productos/VerView.vue'
@@ -62,6 +65,26 @@ const router = createRouter({
       path: '/proveedores',
       name: 'proveedores',
       component: ProveedoresView,
+      meta: {
+        requiredAuh: true,
+        requirePermiso: ['entradas']
+      },
+      beforeEnter: verificarAutenticacion
+    },
+    {
+      path: '/proveedores/nuevo',
+      name: 'proveedornuevo',
+      component: ProveedorNuevoView,
+      meta: {
+        requiredAuh: true,
+        requirePermiso: ['entradas']
+      },
+      beforeEnter: verificarAutenticacion
+    },
+    {
+      path: '/proveedores/editar',
+      name: 'proveedoredit',
+      component: ProveedorEditarView,
       meta: {
         requiredAuh: true,
         requirePermiso: ['entradas']
