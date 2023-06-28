@@ -177,6 +177,17 @@ nav,
     padding: 0px 20px;
 }
 
+.container__secondary {
+    padding-top: 4px;
+    padding-bottom: 1%;
+}
+
+.vista-secondary {
+    max-width: 800px;
+    margin: auto;
+    padding: 0px 20px;
+}
+
 .text__principal {
     display: flex;
     justify-content: center;

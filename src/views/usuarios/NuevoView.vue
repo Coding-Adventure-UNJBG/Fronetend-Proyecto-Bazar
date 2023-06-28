@@ -143,9 +143,9 @@ async function guardarDatos() {
                       <div class="row">
                         <div class="col-sm-6">
                           <div class="mb-2">
-                            <label class="form-label" for="formPasswordU">Contraseña</label>
+                            <label class="form-label" >Contraseña</label>
                             <div class="input-con-icono">
-                              <input :type="showPw === true ? 'text' : 'password'" id="formPasswordU" class="form-control"
+                              <input :type="showPw === true ? 'text' : 'password'" class="form-control"
                                 v-model="datosUsuario.password" />
                               <span class="icon-input" @click="showPw = !showPw">
                                 <font-awesome-icon class="password-icon" :icon="['fas', showPw ? 'eye' : 'eye-slash']" />
@@ -155,9 +155,9 @@ async function guardarDatos() {
                         </div>
                         <div class="col-sm-6">
                           <div class="mb-2">
-                            <label class="form-label" for="formPassword2">Repetir Contraseña</label>
+                            <label class="form-label" >Repetir Contraseña</label>
                             <div class="input-con-icono">
-                              <input :type="showPwD === true ? 'text' : 'password'" id="formPasswordU"
+                              <input :type="showPwD === true ? 'text' : 'password'" 
                                 class="form-control" v-model="datosUsuario.password2" />
                               <span class="icon-input" @click="showPwD = !showPwD">
                                 <font-awesome-icon class="password-icon" :icon="['fas', showPwD ? 'eye' : 'eye-slash']" />
