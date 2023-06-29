@@ -26,8 +26,7 @@ async function obtenerIdProveedor() {
 }
 
  async function validarRUC() {
-
-    await fetch(`${import.meta.env.VITE_API_V1}/proveedor/comprobar?ruc=${datosProveedor.value.ruc}`, {
+    await fetch(`${import.meta.env.VITE_API_V1}/proveedor/comprobar?id_proveedor=${datosProveedor.value.id_proveedor}&ruc=${datosProveedor.value.ruc}`, {
       method: 'GET'
     })
       .then(response => response.json())

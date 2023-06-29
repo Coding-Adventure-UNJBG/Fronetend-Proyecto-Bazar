@@ -82,7 +82,7 @@ const router = createRouter({
       beforeEnter: verificarAutenticacion
     },
     {
-      path: '/proveedores/editar',
+      path: '/proveedores/editar/:id',
       name: 'proveedoredit',
       component: ProveedorEditarView,
       meta: {

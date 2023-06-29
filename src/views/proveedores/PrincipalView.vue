@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import Navegacion from  '../../components/Navegacion.vue'
+import Navegacion from '../../components/Navegacion.vue'
 import { onMounted, ref } from 'vue';
 
 const router = useRouter()
@@ -11,38 +11,39 @@ onMounted(() => {
   cargarData();
 })
 
-async function cargarData(){
+async function cargarData() {
   await fetch(`${import.meta.env.VITE_API_V1}/proveedor`, {
     method: 'GET'
   })
-  .then(response => response.json())
-  .then(data => {
-    console.log(data)
-    dataProveedor.value = data
-  })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      dataProveedor.value = data
+    })
 }
 
 //busca por nombre y ruc
-function buscarProveedor(){
+function buscarProveedor() {
   fetch(`${import.meta.env.VITE_API_V1}/proveedor?nombre=${dataBuscar.value}`, {
     method: 'GET'
   })
-  .then(response => response.json())
-  .then(data => {
-    console.log(data)
-    if(data.hasOwnProperty("error")){
-      dataProveedor.value = ''
-    } else{
-      dataProveedor.value = data
-    }
-  })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      if (data.hasOwnProperty("error")) {
+        dataProveedor.value = ''
+      } else {
+        dataProveedor.value = data
+      }
+    })
 }
 
-function nuevoProveedor(){
-    router.push({ name: 'proveedornuevo'})
+function nuevoProveedor() {
+  router.push({ name: 'proveedornuevo' })
 }
-function editarProveedor(){
-    router.push({ name: 'proveedoredit'})
+
+function editarProveedor(uId) {
+  router.push({ name: 'proveedoredit', params: { id: uId } })
 }
 </script>
 
@@ -63,9 +64,9 @@ function editarProveedor(){
                 <div class="col-md-3">
                   <div class="input-group">
                     <input type="search" class="form-control input-sm" placeholder="Busca por nombre o ruc"
-                    @keypress.enter="buscarProveedor" v-model="dataBuscar">
+                      @keypress.enter="buscarProveedor" v-model="dataBuscar">
                     <button class="btn btn-primary" type="button" id="inputbuscar"
-                     @click="buscarProveedor" ><font-awesome-icon :icon="['fas', 'magnifying-glass']" /></button>
+                      @click="buscarProveedor"><font-awesome-icon :icon="['fas', 'magnifying-glass']" /></button>
                   </div>
                 </div>
                 <div class="col-md-9 d-flex justify-content-start align-items-end">
@@ -103,12 +104,12 @@ function editarProveedor(){
                       <td>{{ item.fecha_registro }}</td>
                       <td>{{ item.comentario }}</td>
                       <td>
-                        <a href="#" data-toggle="tooltip" title="Ver Proveedor"><img
-                            alt="Vue logo" class="logo" src="@/assets/icons/ojo.svg" width="15" /></a>
+                        <a href="#" data-toggle="tooltip" title="Ver Proveedor"><img alt="Vue logo" class="logo"
+                            src="@/assets/icons/ojo.svg" width="15" /></a>
                       </td>
                       <td>
-                        <a href="#" data-toggle="tooltip" title="Editar" @click="editarProveedor"><img
-                            alt="Vue logo" class="logo" src="@/assets/icons/pencil.svg" width="15" /></a>
+                        <a href="#" data-toggle="tooltip" title="Editar" @click="editarProveedor(item.id_proveedor)"><img alt="Vue logo"
+                            class="logo" src="@/assets/icons/pencil.svg" width="15" /></a>
                       </td>
                       <td>
                         <a href="#" data-toggle="tooltip" title="Eliminar"><img alt="Vue logo" class="logo"
