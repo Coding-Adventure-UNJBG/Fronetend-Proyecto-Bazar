@@ -2,7 +2,6 @@
 import { useRouter } from 'vue-router';
 import Navegacion from '../../components/Navegacion.vue'
 import { onMounted, ref } from 'vue';
-import { faSlack } from '@fortawesome/free-brands-svg-icons';
 
 const router = useRouter()
 const msg = ref('')
@@ -26,9 +25,43 @@ async function obtenerIdProveedor() {
     })
 }
 
+ async function validarRUC() {
+
+    await fetch(`${import.meta.env.VITE_API_V1}/proveedor/comprobar?ruc=${datosProveedor.value.ruc}`, {
+      method: 'GET'
+    })
+      .then(response => response.json())
+      .then(data => {
+        //console.log(data)
+        if (data.hasOwnProperty("error")) {
+          msg.value = data.error
+          //console.log("1 error")
+        } else {
+          msg.value = ''
+          //console.log("2 error")
+        }
+      })
+      .catch(error => {
+        msg.value = "v-Error del servicio al verificar los datos"
+      })
+}
+
 async function registrarProveedor() {
   msg.value = ''
   isButtonDisabled.value = true
+
+  // console.log(((datosProveedor.value.ruc).toString()).length)
+  if (((datosProveedor.value.ruc).toString()).length != 11) {
+    msg.value = 'El RUC debe contener 11 dígitos'
+    isButtonDisabled.value = false
+    return
+  } else{
+    await validarRUC()
+    if (msg.value != ''){
+      isButtonDisabled.value = false
+      return
+    } 
+  }
 
   for (var clave in datosProveedor.value) {
     if (datosProveedor.value[clave] == '' && clave != "comentario" && clave != "razon_social" && clave != "direccion") {
@@ -99,7 +132,7 @@ function cancelar() {
                   <div class="col-md-6">
                     <div class="mb-2">
                       <label class="form-label">RUC</label>
-                      <input type="text" class="form-control" v-model="datosProveedor.ruc" />
+                      <input type="number" class="form-control" v-model="datosProveedor.ruc" />
                     </div>
                   </div>
                 </div>
