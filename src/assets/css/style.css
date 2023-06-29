@@ -25,6 +25,11 @@
 
 body {
     background: var(--main_color-secondary) !important;
+    overflow-y: auto !important;
+}
+
+body::-webkit-scrollbar{
+    width: 0px;
 }
 
 form legend {
