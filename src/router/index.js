@@ -7,6 +7,7 @@ import ComprasDetalleView from '../views/entradas/ComprasDetalleView.vue'
 import ProveedoresView from '../views/proveedores/PrincipalView.vue'
 import ProveedorNuevoView from '../views/proveedores/NuevoView.vue'
 import ProveedorEditarView from '../views/proveedores/EditarView.vue'
+import ProveedorVerView from '../views/proveedores/VerView.vue'
 import ProductosView from '../views/productos/PrincipalView.vue'
 import ProductoNuevoView from '../views/productos/NuevoView.vue'
 import ProductoVerView from '../views/productos/VerView.vue'
@@ -85,6 +86,16 @@ const router = createRouter({
       path: '/proveedores/editar/:id',
       name: 'proveedoredit',
       component: ProveedorEditarView,
+      meta: {
+        requiredAuh: true,
+        requirePermiso: ['entradas']
+      },
+      beforeEnter: verificarAutenticacion
+    },
+    {
+      path: '/proveedores/ver/:id',
+      name: 'proveedorver',
+      component: ProveedorVerView,
       meta: {
         requiredAuh: true,
         requirePermiso: ['entradas']

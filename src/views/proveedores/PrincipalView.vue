@@ -45,6 +45,10 @@ function nuevoProveedor() {
 function editarProveedor(uId) {
   router.push({ name: 'proveedoredit', params: { id: uId } })
 }
+
+function verProveedor(uId) {
+  router.push({ name: 'proveedorver', params: { id: uId }})
+}
 </script>
 
 <template>
@@ -104,7 +108,7 @@ function editarProveedor(uId) {
                       <td>{{ item.fecha_registro }}</td>
                       <td>{{ item.comentario }}</td>
                       <td>
-                        <a href="#" data-toggle="tooltip" title="Ver Proveedor"><img alt="Vue logo" class="logo"
+                        <a href="#" data-toggle="tooltip" title="Ver Proveedor" @click="verProveedor(item.id_proveedor)"><img alt="Vue logo" class="logo"
                             src="@/assets/icons/ojo.svg" width="15" /></a>
                       </td>
                       <td>
