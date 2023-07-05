@@ -3,7 +3,9 @@ import { useAuthStore } from '../store/auth'
 import HomeView from '../views/HomeView.vue'
 import ComprasView from '../views/entradas/ComprasView.vue'
 import ComprasDetalleView from '../views/entradas/ComprasDetalleView.vue'
+// import ComprasDetalleView from '../views/entradas/DetalleCompra.vue'
 // import ProveedoresView from '../views/entradas/ProveedoresView.vue'
+import CompraDetalle from '../views/entradas/DetalleCompra.vue'
 import ProveedoresView from '../views/proveedores/PrincipalView.vue'
 import ProveedorNuevoView from '../views/proveedores/NuevoView.vue'
 import ProveedorEditarView from '../views/proveedores/EditarView.vue'
@@ -56,6 +58,16 @@ const router = createRouter({
       path: '/compras/detalle',
       name: 'comprasdetalle',
       component: ComprasDetalleView,
+      meta: {
+        requiredAuh: true,
+        requirePermiso: ['entradas']
+      },
+      beforeEnter: verificarAutenticacion
+    },
+    {
+      path: '/compras/detalle/:id',
+      name: 'detallecompra',
+      component: CompraDetalle,
       meta: {
         requiredAuh: true,
         requirePermiso: ['entradas']

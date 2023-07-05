@@ -15,10 +15,14 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faEyeSlash, faEye, faCameraRetro, faCartShopping, faCashRegister, faCircleLeft, faCirclePlus, faCircleRight, faFileContract, faMagnifyingGlass, faRightFromBracket, faShop, faTruck, faUserGear, faUserSecret } from '@fortawesome/free-solid-svg-icons'
+import { faEyeSlash, faEye, faCameraRetro, faCartShopping, faCashRegister, 
+    faCircleLeft, faCirclePlus, faCircleRight, faFileContract, faMagnifyingGlass, 
+    faRightFromBracket, faShop, faTruck, faUserGear, faUserSecret, faSearch } from '@fortawesome/free-solid-svg-icons'
 
 /* agregar iconos de fontawesome */
-library.add(faEye, faEyeSlash, faUserSecret, faShop, faCartShopping, faCashRegister, faUserGear, faFileContract, faRightFromBracket, faMagnifyingGlass, faCameraRetro, faCircleRight, faCircleLeft, faCirclePlus, faTruck)
+library.add( faEye, faEyeSlash, faUserSecret, faShop, faCartShopping, faCashRegister, 
+    faUserGear, faFileContract, faRightFromBracket, faMagnifyingGlass, faCameraRetro, faCircleRight, 
+    faCircleLeft, faCirclePlus, faTruck, faSearch)
 
 const app = createApp(App)
 const pinia = createPinia()

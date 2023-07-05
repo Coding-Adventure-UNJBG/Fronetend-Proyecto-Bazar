@@ -28,7 +28,7 @@ body {
     overflow-y: auto !important;
 }
 
-body::-webkit-scrollbar{
+body::-webkit-scrollbar {
     width: 0px;
 }
 
@@ -193,6 +193,12 @@ nav,
     padding: 0px 20px;
 }
 
+.vista-tertiary {
+    max-width: 1300px;
+    margin: auto;
+    padding: 0px 20px;
+}
+
 .text__principal {
     display: flex;
     justify-content: center;
@@ -259,9 +265,30 @@ nav,
     padding-right: 40px;
 }
 
+.input-con-icono-izq {
+    position: relative;
+}
+
+.icon-input-izq {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 15px;
+    z-index: 1;
+}
+
+.input-con-icono-izq input {
+    padding-left: 40px;
+}
+
+
 .password-icon {
     color: #777;
     font-size: 0.8rem;
+}
+
+.search-icon {
+    color: #888888;
 }
 
 /* Input con icono - END*/
@@ -335,3 +362,90 @@ nav,
 }
 
 /* Modal - END */
+
+/* Busqueda - START */
+.search-container {
+    position: relative;
+    margin: 0 auto;
+}
+
+.search-results {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    max-height: 10rem;
+    overflow-y: auto;
+}
+
+.search-results::-webkit-scrollbar {
+    display: none;
+}
+
+.search-container:focus-within .search-results {
+    display: block;
+}
+
+.list-group-item:hover {
+    background-color: #e9ecef;
+    cursor: pointer;
+}
+
+/* Busqueda - END */
+
+/* Modal para productos - START */
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* display: flex; */
+  display: block;
+  transition: opacity 0.3s ease;
+  overflow-y: auto;
+  padding-top: 5rem;
+}
+
+.modal-mask::-webkit-scrollbar {
+  width: 0;
+}
+
+.modal-container {
+  display: relative;
+  /* width: auto; */
+  margin: auto;
+  /* padding: 20px 10px; */
+  /* background-color: #fff; */
+  background-color: none;
+  border-radius: 2px;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33); */
+  transition: all 0.3s ease;
+  /* overflow-y: auto; */
+}
+
+/* .modal-body {
+  margin: 20px 0;
+} */
+
+.modal-default-button {
+  float: right;
+}
+
+.modal-enter-from {
+  opacity: 0;
+}
+
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-from .modal-container,
+.modal-leave-to .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+/* Modal para productos - END */
