@@ -35,7 +35,10 @@ export default {
         .then(response => response.json())
         .then(data => {
           console.log(data)
-          dataProductos.value = data
+          if (data.hasOwnProperty("error")) {
+            dataProductos.value = ''
+          } else
+            dataProductos.value = data
         })
     })
 
@@ -117,12 +120,11 @@ export default {
                   <thead>
                     <tr class="text-center align-middle">
                       <th width="4%" scope="col" class="fw-bold">N°</th>
-                      <th width="22%" class="fw-bold">NOMBRE</th>
-                      <th width="13%" class="fw-bold">MARCA</th>
-                      <th width="13%" class="fw-bold">MEDIDA</th>
-                      <th width="13%" class="fw-bold">UNIDAD</th>
-                      <th width="13%" class="fw-bold">STOCK</th>
-                      <th width="13%" class="fw-bold">ESTADO</th>
+                      <th width="31%" class="fw-bold">NOMBRE</th>
+                      <th width="15%" class="fw-bold">MARCA</th>
+                      <th width="15%" class="fw-bold">UNIDAD</th>
+                      <th width="15%" class="fw-bold">STOCK</th>
+                      <th width="15%" class="fw-bold">ESTADO</th>
                       <th width="9%" colspan="3" class="fw-bold">OPCIÓN</th>
                     </tr>
                     <tr>
@@ -137,8 +139,7 @@ export default {
                       <td>{{ item.id_producto }}</td>
                       <td>{{ item.nombre }}</td>
                       <td>{{ item.marca }}</td>
-                      <td>{{ item.medida }}</td>
-                      <td>{{ item.tipo_unidad }}</td>
+                      <td>{{ item.unidad }}</td>
                       <td>{{ item.stock }}</td>
                       <td>{{ item.estado }}</td>
                       <td>
