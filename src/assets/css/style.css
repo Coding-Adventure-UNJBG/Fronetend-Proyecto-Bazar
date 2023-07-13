@@ -449,3 +449,14 @@ nav,
   transform: scale(1.1);
 }
 /* Modal para productos - END */
+
+/* Reporte */
+.btn-report {
+  /* background-color: #3c8dbc; */
+  /* border-color: #367fa9; */
+  font-weight: 400;
+  border-radius: 3px;
+  margin-top: 10px;
+  border: 1px solid transparent;
+  padding: 0.5rem;
+}

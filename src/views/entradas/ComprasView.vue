@@ -244,14 +244,14 @@ function cancelar() {
                     <div class="col-sm-6">
                       <div class="mb-2">
                         <label class="form-label">Cantidad</label>
-                        <input type="text" class="form-control" placeholder="0" v-model="datosCompra.cantidad">
+                        <input type="number" class="form-control" placeholder="0" min="0" v-model="datosCompra.cantidad">
                       </div>
                     </div>
                     <div class="col-sm-6">
                       <div class="mb-2">
                         <label class="form-label">Precio unitario</label>
                         <div class="input-con-icono-izq">
-                          <input type="text" class="form-control text-end" placeholder="0.00"
+                          <input type="number" class="form-control text-end" placeholder="0.00" step="0.01" min="0"
                             v-model="datosCompra.precio_compra">
                           <span class="icon-input-izq">S/.</span>
                         </div>
@@ -261,7 +261,7 @@ function cancelar() {
                   <div class="mb-2">
                     <label class="form-label">Importe total</label>
                     <div class="input-con-icono-izq">
-                      <input type="text" class="form-control text-end" placeholder="0.00"
+                      <input type="number" class="form-control text-end" placeholder="0.00" step="0.01" min="0"
                         v-model="datosCompra.importe_total">
                       <span class="icon-input-izq">S/.</span>
                     </div>
@@ -269,7 +269,7 @@ function cancelar() {
                   <div class="mb-2">
                     <label class="form-label">Costo de operación (opcional)</label>
                     <div class="input-con-icono-izq">
-                      <input type="text" class="form-control text-end" placeholder="0.00"
+                      <input type="number" class="form-control text-end" placeholder="0.00" step="0.01" min="0"
                         v-model="datosCompra.costo_operacion">
                       <span class="icon-input-izq">S/.</span>
                     </div>
