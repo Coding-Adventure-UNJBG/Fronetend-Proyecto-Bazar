@@ -1,10 +1,51 @@
 <script setup>
 import Navegacion from '../../components/Navegacion.vue'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router';
 
 const router = useRouter()
+const datosBusqueda = ref('')
+const showResults = ref(false)
+const dataBuscarProducto = ref('')
+const productoSeccionado = ref('')
 
+//Busqueda de productos
+function cargarBusqueda() {
+  fetch(`${import.meta.env.VITE_API_V1}/producto`, {
+    method: 'GET'
+  })
+  .then(response => response.json())
+  .then((data) => {
+    console.log(data)
+    datosBusqueda.value = data
+  })
+}
+
+const buscar = () => {
+  cargarBusqueda()
+  showResults.value = true
+  console.log('Buscar: ', dataBuscarProducto.value)
+}
+
+const filtrarBusqueda = computed(() => {
+  const search = dataBuscarProducto.value.toLowerCase()
+  const resultados = Object.values(datosBusqueda.value);
+  return search ? resultados.filter(resultado => resultado.nombre.toLowerCase().includes(search)) : [];
+})
+
+function buscarProducto() {
+  // showResults.value = false
+  if (dataBuscarProducto.value.trim() == '') {
+    return
+  } else {
+    buscar()
+  }
+}
+
+function seleccionarProducto(producto) {
+  showResults.value = false
+  productoSeccionado.value = producto
+}
 function regresar() {
   router.push({ name: 'ventas' })
 }
@@ -13,6 +54,122 @@ function regresar() {
 <template>
   <Navegacion />
 
+    <div class="container__principal">
+      <div class="vista-principal">
+        <div class="text__principal">
+          <h1>REGISTRO DE VENTA</h1>
+        </div>
+        <div class="container__vista-principal">
+          <div class="row">
+            <div class="col-sm-8">
+              <div class="card shadow mb-3">
+                <div class="card-body">
+                  <form>
+                    <div class="mb-2">
+                      <span class="fw-bold">Datos del producto</span>
+                    </div>
+                    <div class="mb-2">
+                      <div class="search-container">
+                        <div class="input-con-icono">
+                          <input type="text" class="form-control" v-model="dataBuscarProducto"
+                            placeholder="Buscar producto ..." @keydown.enter="buscarProducto">
+                          <span class="icon-input">
+                            <font-awesome-icon class="search-icon" :icon="['fas', 'search']" />
+                          </span>
+                        </div>
+                        <div class="search-results" v-if="showResults && filtrarBusqueda.length > 0"
+                          tabindex="0">
+                          <ul class="list-group">
+                            <li class="list-group-item" v-for="resultado in filtrarBusqueda" :key="resultado.id"
+                              @click="seleccionarProducto(resultado)">
+                              {{ resultado.nombre }} / {{ resultado.marca }} / {{ resultado.unidad }}
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="search-results"
+                          v-else-if="showResults && dataBuscarProducto.trim() != ''">
+                          <ul class="list-group">
+                            <li class="list-group-item">No se encontraron resultados</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <div class="mb-2">
+                          <label class="form-label">Nombre</label>
+                          <input type="text" class="form-control" v-model="productoSeccionado.nombre" disabled>
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="mb-2">
+                          <label class="form-label">Marca</label>
+                          <input type="text" class="form-control" v-model="productoSeccionado.marca" disabled>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <div class="mb-2">
+                          <label class="form-label">Unidad</label>
+                          <input type="text" class="form-control" v-model="productoSeccionado.unidad" disabled>
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="mb-2">
+                          <label class="form-label">Stock</label>
+                          <input type="text" class="form-control" v-model="productoSeccionado.stock" disabled>
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="mb-2">
+                          <label class="form-label">Estado</label>
+                          <input type="text" class="form-control" v-model="productoSeccionado.estado" disabled>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <div class="mb-2">
+                          <label class="form-label">Cantidad</label>
+                          <input type="text" class="form-control">
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="mb-2">
+                          <label class="form-label">Precio venta</label>
+                          <input type="text" class="form-control" disabled>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-center pt-2 mb-2">
+                      <button type="button" class="btn btn-secondary me-3" :disabled="isButtonDisabled">Agregar</button>
+                      <button type="button" class="btn btn-secondary">Cancelar</button>
+                    </div>
+                  </form>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="card shadow mb-3">
+                <div class="card-body">
+                  <form>
+                    <div class="mb-2">
+                      <span class="fw-bold">Detalles de la vents</span>
+                    </div>
+                    <div class="mb-2">
+                      <label class="form-label"></label>
+                      <input type="text" class="form-control">
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   <div class="container-fluid d-flex justify-content-center align-items-center">
     <div class="w-personalizado mx-auto">
       <p></p>
@@ -21,23 +178,7 @@ function regresar() {
           <div class="col-xl-6">
             <div class="card-body">
               <h3 class="mb-3 mt-2  text-center custom-tittle">Nueva Venta</h3>
-              <form>
-                <span class="text-begin fw-bold">Datos del Cliente</span>
-                <div class="row mb-2">
-                  <div class="col-md-3">
-                    <label for="formDNI" class="form-label custom-tittle">DNI</label>
-                    <input type="text" class="form-control" id="formDNI">
-                  </div>
-                  <div class="col-md-9">
-                    <label for="formNombres" class="form-label custom-tittle">Nombres</label>
-                    <input type="text" class="form-control" id="formNombres">
-                  </div>
-                </div>
-                <div class="mb-2">
-                  <label for="formDireccion" class="form-label custom-tittle">Dirección</label>
-                  <input type="text" class="form-control" id="formDireccion">
-                </div>
-              </form>
+
               <hr>
               <form>
                 <span class="text-begin fw-bold">Datos del Producto</span>
