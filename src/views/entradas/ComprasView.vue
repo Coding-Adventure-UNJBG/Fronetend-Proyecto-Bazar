@@ -10,7 +10,7 @@ const showProveedor = ref(false)
 const showResults = ref(false)
 const msg = ref('')
 
-const datosCompra = ref({ "id_proveedor": "", "id_producto": "", "descripcion": "", "cantidad": "", "precio_compra": "", "importe_total": "", "costo_operacion": "" })
+const datosCompra = ref({ "id_proveedor": "", "id_producto": "", "descripcion": "", "cantidad": "", "precio_compra": "", "importe_total": "", "costo_operacion": "0" })
 const datosBusqueda = ref('')
 const queBuscar = ref('')
 const dataBuscarProducto = ref('')

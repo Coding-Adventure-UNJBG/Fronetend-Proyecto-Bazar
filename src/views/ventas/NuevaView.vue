@@ -8,7 +8,19 @@ const datosBusqueda = ref('')
 const showResults = ref(false)
 const dataBuscarProducto = ref('')
 const productoSeccionado = ref('')
-const detalleProducto = ref('')
+
+const detalleProducto = ref([])
+const datosVenta = ref({ "serie": "001", "correlativo": "", "tipo_pago": "EFECTIVO", "total_dinero": "0.00", "comentario": "" })
+const showEdit = ref(false)
+const idEditar = ref('')
+
+const totalProductos = computed(() => {
+  const total = detalleProducto.value.reduce((total, venta) => {
+    return total + (venta.cantidad * venta.precio_venta)
+  }, 0)
+
+  return total.toFixed(2)
+})
 
 //Busqueda de productos
 function cargarBusqueda() {
@@ -31,7 +43,7 @@ const buscar = () => {
 const filtrarBusqueda = computed(() => {
   const search = dataBuscarProducto.value.toLowerCase()
   const resultados = Object.values(datosBusqueda.value);
-  return search ? resultados.filter(resultado => resultado.nombre.toLowerCase().includes(search)) : [];
+  return search ? resultados.filter(resultado => resultado.nombre.toLowerCase().includes(search) && resultado.estado == 'DISPONIBLE') : [];
 })
 
 function buscarProducto() {
@@ -47,6 +59,37 @@ function seleccionarProducto(producto) {
   showResults.value = false
   productoSeccionado.value = producto
 }
+
+function agregarCarrito() {
+  console.log(productoSeccionado.value)
+  detalleProducto.value.push(productoSeccionado.value)
+  productoSeccionado.value = ''
+  console.log(detalleProducto.value)
+}
+
+function editarProducto(id, producto) {
+  // productoSeccionado.value = producto
+  showEdit.value = true
+  productoSeccionado.value = { ...producto}
+  idEditar.value = id
+  console.log('Id es: ', id)
+}
+
+function finEditarProducto() {
+  console.log(productoSeccionado.value)
+  detalleProducto.value[idEditar.value] = productoSeccionado.value
+  productoSeccionado.value = ''
+  idEditar.value = ''
+  showEdit.value = false
+}
+
+function eliminarProducto(id) {
+  console.log('Id es: ', id)
+  detalleProducto.value.splice(id, 1)
+
+  console.log(detalleProducto.value)
+}
+
 function regresar() {
   router.push({ name: 'ventas' })
 }
@@ -98,14 +141,17 @@ function regresar() {
                     </div>
                     <div class="col-sm-2">
                       <div class="mb-2 d-grid gap-2 mx-auto">
-                        <button type="button" class="btn btn-secondary" :disabled="isButtonDisabled">Agregar</button>
+                        <button v-if="showEdit" type="button" class="btn btn-secondary" :disabled="isButtonDisabled"
+                          @click="finEditarProducto">Guardar</button>
+                        <button v-else type="button" class="btn btn-secondary" :disabled="isButtonDisabled"
+                          @click="agregarCarrito">Agregar</button>
                       </div>
                     </div>
                   </div>
                   <div class="mb-2">
                     <label class="form-label">Producto</label>
                     <textarea class="form-control" rows="1" style="max-height: 65px;"
-                     disabled>{{ productoSeccionado.nombre }} - {{ productoSeccionado.marca }} - {{ productoSeccionado.unidad }}</textarea>
+                      disabled>{{ productoSeccionado.nombre }} - {{ productoSeccionado.marca }} - {{ productoSeccionado.unidad }}</textarea>
                   </div>
                   <div class="row">
                     <div class="col-sm-4">
@@ -123,7 +169,7 @@ function regresar() {
                     <div class="col-sm-4">
                       <div class="mb-2">
                         <label class="form-label">Cantidad</label>
-                        <input type="number" class="form-control">
+                        <input type="number" class="form-control" v-model="productoSeccionado.cantidad">
                       </div>
                     </div>
                   </div>
@@ -135,11 +181,11 @@ function regresar() {
                   <table class="table table-bordered table-hover" width="100%" cellspacing="0" style="font-size: 14px">
                     <thead>
                       <tr class="text-center align-middle">
-                        <th width="4%" scope="col" class="fw-bold">N°</th>
-                        <th width="52%" class="fw-bold">PRODUCTO</th>
+                        <!-- <th width="4%" scope="col" class="fw-bold">N°</th> -->
+                        <th width="54%" class="fw-bold">DESCRIPCIÓN</th>
                         <th width="10%" class="fw-bold">CANTIDAD</th>
-                        <th width="12%" class="fw-bold">PRECIO U.</th>
-                        <th width="12%" class="fw-bold">TOTAL</th>
+                        <th width="13%" class="fw-bold">PRECIO U.</th>
+                        <th width="13%" class="fw-bold">TOTAL</th>
                         <th width="10%" colspan="2" class="fw-bold">OPCIÓN</th>
                       </tr>
                       <tr>
@@ -150,19 +196,20 @@ function regresar() {
                       <tr v-if="detalleProducto == ''" class="table-light">
                         <td colspan="100%">No se encontraron datos</td>
                       </tr>
-                      <tr class="text-center align-middle">
-                        <td>1</td>
-                        <td class="text-start">PASTA DENTAL - DENTO - 75 ML</td>
-                        <td>10</td>
-                        <td>S/. 3.50</td>
-                        <td>S/. 30.50</td>
+                      <!-- <tr v-else class="text-center align-middle" v-for="venta in detalleProducto" :key="detalleProducto.id"> -->
+                      <tr v-else class="text-center align-middle" v-for="(venta, indice) in detalleProducto" :key="indice">
+                        <!-- <td>{{ venta.id_producto }}</td> -->
+                        <td class="text-start">{{ venta.nombre }} - {{ venta.marca }} - {{ venta.unidad }}</td>
+                        <td>{{ venta.cantidad }}</td>
+                        <td>S/. {{ venta.precio_venta }}</td>
+                        <td>S/. {{ (venta.cantidad * venta.precio_venta).toFixed(2) }}</td>
                         <td>
-                          <a href="#" data-toggle="tooltip" title="Editar"><img src="@/assets/icons/pencil.svg"
+                          <a href="#" data-toggle="tooltip" title="Editar" @click="editarProducto(indice, venta)"><img src="@/assets/icons/pencil.svg"
                               width="15" /></a>
                         </td>
                         <td>
-                          <a href="#" data-toggle="tooltip" title="Eliminar"><img src="@/assets/icons/delete.svg"
-                              width="15" /></a>
+                          <a href="#" data-toggle="tooltip" title="Eliminar" @click="eliminarProducto(indice)"><img
+                              src="@/assets/icons/delete.svg" width="15" /></a>
                         </td>
                       </tr>
                     </tbody>
@@ -183,55 +230,47 @@ function regresar() {
                     <div class="col-sm-4">
                       <div class="mb-3">
                         <label class="form-label">Serie</label>
-                        <input type="text" class="form-control text-center" value="001" disabled>
+                        <input type="text" class="form-control text-center" v-model="datosVenta.serie" disabled>
                       </div>
                     </div>
                     <div class="col-sm-8">
                       <div class="mb-3">
                         <label class="form-label">N° Boleta</label>
-                        <input type="text" class="form-control text-center" value="000260" disabled>
+                        <!-- value="000260" -->
+                        <input type="text" class="form-control text-center" v-model="datosVenta.correlativo" disabled>
                       </div>
                     </div>
                   </div>
                   <div class="mb-2">
                     <label class="form-label">Tipo de pago</label>
-                    <select class="form-select">
-                      <option value="">Efectivo</option>
-                      <option value="">Yape</option>
+                    <select class="form-select" v-model="datosVenta.tipo_pago">
+                      <option value="EFECTIVO">Efectivo</option>
+                      <option value="YAPE">Yape</option>
                     </select>
                   </div>
                   <div class="mb-2">
                     <label class="form-label">Comentario</label>
-                    <textarea class="form-control" rows="1" style="max-height: 65px;"></textarea>
+                    <textarea class="form-control" rows="1" style="max-height: 65px;"
+                      v-model="datosVenta.comentario"></textarea>
                   </div>
                   <div class="mb-2 mt-4">
                     <div class="row">
-                      <div class="col-sm-6">
-                        <label class="form-label">Subtotal</label>
+                      <!-- <div style="display: flex; justify-content: space-between;">
+                        <label class="form-label" style="float: left; ">Subtotal</label>
+                        <label class="form-label" style="float: right;">S/. 164.00</label>
                       </div>
-                      <div class="col-sm-6">
-                        <label class="form-label">S/.</label>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-6">
-                        <label class="form-label">IGV (18%)</label>
-                      </div>
-                      <div class="col-sm-6">
-                        <label class="form-label">S/.</label>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-6">
-                        <label class="form-label">Total</label>
-                      </div>
-                      <div class="col-sm-6">
-                        <label class="form-label">S/.</label>
+                      <div style="display: flex; justify-content: space-between;">
+                        <label class="form-label" style="float: left;">IGV (18%)</label>
+                        <label class="form-label" style="float: right;">S/. 36.00</label>
+                      </div> -->
+                      <div style="display: flex; justify-content: space-between;">
+                        <label class="form-label" style="float: left; padding-left: 15px;">Total</label>
+                        <label class="form-label" style="float: right; padding-right: 15px;">S/. {{
+                          totalProductos }}</label>
                       </div>
                     </div>
                   </div>
-
-                  <div class="d-flex justify-content-center pt-2 mb-2">
+                  <div class="d-flex justify-content-center mb-2">
                     <button type="button" class="btn btn-primary btn-report me-3"
                       :disabled="isButtonDisabled">Guardar</button>
                     <button type="button" class="btn btn-primary btn-report">Cancelar</button>
