@@ -1,10 +1,14 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import Navegacion from '../../components/Navegacion.vue'
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const router = useRouter()
 const dataVenta = ref('')
+
+onMounted(() => {
+  cargarData()
+})
 
 async function cargarData() {
   await fetch(`${import.meta.env.VITE_API_V1}/venta`, {
@@ -60,7 +64,7 @@ function nuevaVenta() {
                     <tr class="text-center align-middle">
                       <th width="4%" scope="col" class="fw-bold">N°</th>
                       <th width="16%" class="fw-bold">BOLETA</th>
-                      <th width="10%" class="fw-bold">CANTIDAD</th>
+                      <th width="10%" class="fw-bold">ITEMS</th>
                       <th width="10%" class="fw-bold">FECHA</th>
                       <th width="10%" class="fw-bold">IMPORTE</th>
                       <th width="10%" class="fw-bold">PAGO</th>
@@ -75,9 +79,9 @@ function nuevaVenta() {
                     <tr v-else class="text-center align-middle" v-for="venta in dataVenta" :key="dataVenta.id">
                       <td>{{ venta.id_venta }}</td>
                       <td>{{ venta.serie }} - {{ venta.correlativo }}</td>
-                      <td>0</td>
+                      <td>{{ venta.items }}</td>
                       <td>{{ venta.fecha }}</td>
-                      <td>{{ venta.total_dinero }}</td>
+                      <td>S/. {{ venta.total_dinero }}</td>
                       <td>{{ venta.tipo_pago }}</td>
                       <td>{{ venta.comentario }}</td>
                       <td>

@@ -10,9 +10,11 @@ const dataBuscarProducto = ref('')
 const productoSeccionado = ref('')
 
 const detalleProducto = ref([])
-const datosVenta = ref({ "serie": "001", "correlativo": "", "tipo_pago": "EFECTIVO", "total_dinero": "0.00", "comentario": "" })
+const datosVenta = ref({ "serie": "001", "correlativo": "000247", "tipo_pago": "EFECTIVO", "total_dinero": "0.00", "comentario": "" })
 const showEdit = ref(false)
 const idEditar = ref('')
+const msg = ref('')
+
 
 const totalProductos = computed(() => {
   const total = detalleProducto.value.reduce((total, venta) => {
@@ -92,6 +94,39 @@ function eliminarProducto(id) {
 
 function regresar() {
   router.push({ name: 'ventas' })
+}
+
+function GuardarVenta() {
+  datosVenta.value.total_dinero = totalProductos
+  // Unir las dos variables
+  datosVenta.value = {
+    ...datosVenta.value,
+    detalleVenta: detalleProducto.value
+  }
+  console.log(datosVenta.value)
+  insertarVenta()
+}
+
+function insertarVenta() {
+  fetch(`${import.meta.env.VITE_API_V1}/venta`, {
+    method: 'POST',
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: JSON.stringify(datosVenta.value)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.hasOwnProperty("message")) {
+        msg.value = data.message
+        regresar()
+      } else {
+        msg.value = data.error
+      }
+  })
+  .catch(error => {
+      msg.value = "Error del servicio al guardar los datos"
+    })
 }
 </script>
 
@@ -272,8 +307,8 @@ function regresar() {
                   </div>
                   <div class="d-flex justify-content-center mb-2">
                     <button type="button" class="btn btn-primary btn-report me-3"
-                      :disabled="isButtonDisabled">Guardar</button>
-                    <button type="button" class="btn btn-primary btn-report">Cancelar</button>
+                      :disabled="isButtonDisabled" @click="GuardarVenta">Guardar</button>
+                    <button type="button" class="btn btn-primary btn-report" @click="regresar">Cancelar</button>
                   </div>
                 </form>
               </div>
