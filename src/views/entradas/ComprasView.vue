@@ -10,7 +10,7 @@ const showProveedor = ref(false)
 const showResults = ref(false)
 const msg = ref('')
 
-const datosCompra = ref({ "id_proveedor": "", "id_producto": "", "descripcion": "", "cantidad": "", "precio_compra": "", "importe_total": "", "costo_operacion": "0" })
+const datosCompra = ref({ "id_proveedor": "", "id_producto": "", "descripcion": "", "cantidad": "", "precio_compra": "", "costo_operacion": "0" })
 const datosBusqueda = ref('')
 const queBuscar = ref('')
 const dataBuscarProducto = ref('')
@@ -18,6 +18,12 @@ const dataBuscarProveedor = ref('')
 const productoSeccionado = ref('')
 const proveedorSeccionado = ref('')
 
+
+const totalCompra = computed(() => {
+  const cantidad = Number(datosCompra.value.cantidad);
+  const precio = Number(datosCompra.value.precio_compra);
+  return (cantidad * precio).toFixed(2)
+})
 
 //Busqueda generalizada
 function cargarBusqueda() {
@@ -86,7 +92,7 @@ function seleccionarProducto(producto) {
 }
 
 //Validacion de campos
-function guardarEntrada() {
+async function guardarEntrada() {
   msg.value = ''
   isButtonDisabled.value = true
 
@@ -101,7 +107,28 @@ function guardarEntrada() {
     return
   }
 
-  insertarCompra()
+  msg.value = ''
+  if (datosCompra.value.cantidad <= 0) {
+    msg.value = 'Error: Ingrese una valor válido para el campo "Cantidad"'
+    isButtonDisabled.value = false
+    return
+  }
+
+  msg.value = ''
+  if (datosCompra.value.precio_compra <= 0) {
+    msg.value = 'Error: Ingrese una valor válido para el campo "Precio Unitario"'
+    isButtonDisabled.value = false
+    return
+  }
+
+  msg.value = ''
+  if (datosCompra.value.costo_operacion < 0) {
+    msg.value = 'Error: Ingrese una valor válido para el campo "Costo de operación"'
+    isButtonDisabled.value = false
+    return
+  }
+
+  await insertarCompra()
   isButtonDisabled.value = false
 }
 
@@ -261,8 +288,8 @@ function cancelar() {
                   <div class="mb-2">
                     <label class="form-label">Importe total</label>
                     <div class="input-con-icono-izq">
-                      <input type="number" class="form-control text-end" placeholder="0.00" step="0.01" min="0"
-                        v-model="datosCompra.importe_total">
+                      <input type="number" class="form-control text-end"
+                        :value="totalCompra" disabled>
                       <span class="icon-input-izq">S/.</span>
                     </div>
                   </div>
