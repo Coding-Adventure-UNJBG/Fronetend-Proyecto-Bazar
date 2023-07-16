@@ -1,5 +1,6 @@
 <script setup>
 import Navegacion from '../../components/Navegacion.vue'
+import { onMounted } from 'vue';
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router';
 
@@ -10,11 +11,29 @@ const dataBuscarProducto = ref('')
 const productoSeccionado = ref('')
 
 const detalleProducto = ref([])
-const datosVenta = ref({ "serie": "001", "correlativo": "000247", "tipo_pago": "EFECTIVO", "total_dinero": "0.00", "comentario": "" })
+const datosVenta = ref({ "serie": "001", "correlativo": "", "tipo_pago": "EFECTIVO", "total_dinero": "0.00", "comentario": "" })
 const showEdit = ref(false)
 const idEditar = ref('')
 const msg = ref('')
 
+onMounted(() => {
+  obtenerCorrelativo()
+})
+
+async function obtenerCorrelativo() {
+  await fetch(`${import.meta.env.VITE_API_V1}/venta/correlativo`, {
+    method: 'GET'
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      let corr = parseInt(data[0].correlativo, 10) + 1
+      datosVenta.value.correlativo = corr.toString().padStart(6, 0)
+    })
+    .catch(error => {
+      msg.value = "Error del servicio al obtener el último ID"
+    })
+}
 
 const totalProductos = computed(() => {
   const total = detalleProducto.value.reduce((total, venta) => {
