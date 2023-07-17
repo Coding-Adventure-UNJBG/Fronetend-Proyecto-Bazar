@@ -24,6 +24,10 @@ async function cargarData() {
     })
 }
 
+function verVenta(vId) {
+  router.push({ name: 'ventaver', params: { id: vId} })
+}
+
 function nuevaVenta() {
   router.push({ name: 'ventanueva' })
 }
@@ -85,12 +89,12 @@ function nuevaVenta() {
                       <td>{{ venta.tipo_pago }}</td>
                       <td>{{ venta.comentario }}</td>
                       <td>
-                        <a href="#" data-toggle="tooltip" title="Ver Factura"><img alt="Vue logo" class="logo"
+                        <a href="#" data-toggle="tooltip" title="Ver Venta" @click="verVenta(venta.id_venta)"><img alt="Vue logo" class="logo"
                             src="@/assets/icons/ojo.svg" width="15" /></a>
                       </td>
                       <td>
-                        <a href="#" data-toggle="tooltip" title="Editar"><img alt="Vue logo" class="logo"
-                            src="@/assets/icons/pencil.svg" width="15" /></a>
+                        <a href="#" data-toggle="tooltip" title="Ver boleta"><img alt="Vue logo" class="logo"
+                            src="@/assets/icons/image.svg" width="15" /></a>
                       </td>
                     </tr>
                   </tbody>
