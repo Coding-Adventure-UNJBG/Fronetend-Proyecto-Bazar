@@ -1,20 +1,24 @@
 <script setup>
-import Navegacion from '../../components/Navegacion.vue'
-import { onMounted } from 'vue';
-import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router';
+import Navegacion from '../../components/Navegacion.vue'
+import { onMounted, ref, computed } from 'vue'
 
 const router = useRouter()
+const isButtonDisabled = ref(false)
+const isInputDisabled = ref(false)
 const datosBusqueda = ref('')
 const showResults = ref(false)
 const dataBuscarProducto = ref('')
-const productoSeccionado = ref('')
+const productoSeccionado = ref({ "cantidad": "" })
 
 const detalleProducto = ref([])
 const datosVenta = ref({ "serie": "001", "correlativo": "", "tipo_pago": "EFECTIVO", "total_dinero": "0.00", "comentario": "" })
 const showEdit = ref(false)
 const idEditar = ref('')
+const msgP = ref('')
 const msg = ref('')
+
+const totalStock = ref('')
 
 onMounted(() => {
   obtenerCorrelativo()
@@ -79,51 +83,93 @@ function buscarProducto() {
 function seleccionarProducto(producto) {
   showResults.value = false
   productoSeccionado.value = producto
+  totalStock.value = producto.stock
 }
 
 function agregarCarrito() {
-  console.log(productoSeccionado.value)
+
+  isButtonDisabled.value = true
+
+  //Validación detalle compra
+  msgP.value = ''
+  if (!productoSeccionado.value || !productoSeccionado.value.cantidad) {
+    msgP.value = "Error: Los campos no pueden estar vacios"
+    isButtonDisabled.value = false
+    return
+  }
+  msgP.value = ''
+  if (productoSeccionado.value.cantidad <= 0 || productoSeccionado.value.cantidad > totalStock.value) {
+    msgP.value = "Error: Ingrese una cantidad válida"
+    isButtonDisabled.value = false
+    return
+  }
+
+  // console.log(productoSeccionado.value)
   detalleProducto.value.push(productoSeccionado.value)
   productoSeccionado.value = ''
-  console.log(detalleProducto.value)
+  dataBuscarProducto.value = ''
+  isButtonDisabled.value = false
+  // console.log(detalleProducto.value)
 }
 
 function editarProducto(id, producto) {
-  // productoSeccionado.value = producto
-  showEdit.value = true
-  productoSeccionado.value = { ...producto}
-  idEditar.value = id
-  console.log('Id es: ', id)
+  isInputDisabled.value = true //Deshabilitadmos busqueda
+  showEdit.value = true //Para mostrar el boton guardar
+  productoSeccionado.value = { ...producto } //Clonamos
+  idEditar.value = id //Obtenemos id
 }
 
-function finEditarProducto() {
-  console.log(productoSeccionado.value)
+function GuardarProducto() {
+  // console.log(productoSeccionado.value)
+
+  isButtonDisabled.value = true
+
+  //Validaciones
+  msgP.value = ''
+  if (!productoSeccionado.value || !productoSeccionado.value.cantidad) {
+    msgP.value = "Error: Los campos no pueden estar vacios"
+    isButtonDisabled.value = false
+    return
+  }
+  msgP.value = ''
+  if (productoSeccionado.value.cantidad <= 0 || productoSeccionado.value.cantidad > totalStock.value) {
+    msgP.value = "Error: Ingrese una cantidad válida"
+    isButtonDisabled.value = false
+    return
+  }
+
   detalleProducto.value[idEditar.value] = productoSeccionado.value
   productoSeccionado.value = ''
   idEditar.value = ''
-  showEdit.value = false
+  showEdit.value = false //Para ocultar el boton guardar
+  isButtonDisabled.value = false
+  isInputDisabled.value = false
 }
 
 function eliminarProducto(id) {
-  console.log('Id es: ', id)
   detalleProducto.value.splice(id, 1)
-
-  console.log(detalleProducto.value)
+  // console.log(detalleProducto.value)
 }
 
-function regresar() {
-  router.push({ name: 'ventas' })
-}
+async function GuardarVenta() {
 
-function GuardarVenta() {
+  msg.value = ''
+  isButtonDisabled.value = true
+  if (detalleProducto.value == '') {
+    msg.value = "Error: Ingrese al menos un producto"
+    isButtonDisabled.value = false
+    return
+  }
   datosVenta.value.total_dinero = totalProductos
   // Unir las dos variables
   datosVenta.value = {
     ...datosVenta.value,
     detalleVenta: detalleProducto.value
   }
+
   console.log(datosVenta.value)
-  insertarVenta()
+  await insertarVenta()
+  isButtonDisabled.value = false
 }
 
 function insertarVenta() {
@@ -134,19 +180,24 @@ function insertarVenta() {
     },
     body: JSON.stringify(datosVenta.value)
   })
-  .then(response => response.json())
-  .then(data => {
-    if (data.hasOwnProperty("message")) {
+    .then(response => response.json())
+    .then(data => {
+      if (data.hasOwnProperty("message")) {
         msg.value = data.message
         regresar()
       } else {
         msg.value = data.error
       }
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       msg.value = "Error del servicio al guardar los datos"
     })
 }
+
+function regresar() {
+  router.push({ name: 'ventas' })
+}
+
 </script>
 
 <template>
@@ -172,7 +223,8 @@ function insertarVenta() {
                         <div class="search-container">
                           <div class="input-con-icono">
                             <input type="text" class="form-control" v-model="dataBuscarProducto"
-                              placeholder="Buscar producto ..." @keydown.enter="buscarProducto">
+                              placeholder="Buscar producto ..." @keydown.enter="buscarProducto"
+                              :disabled="isInputDisabled">
                             <span class="icon-input">
                               <font-awesome-icon class="search-icon" :icon="['fas', 'search']" />
                             </span>
@@ -196,7 +248,7 @@ function insertarVenta() {
                     <div class="col-sm-2">
                       <div class="mb-2 d-grid gap-2 mx-auto">
                         <button v-if="showEdit" type="button" class="btn btn-secondary" :disabled="isButtonDisabled"
-                          @click="finEditarProducto">Guardar</button>
+                          @click="GuardarProducto">Guardar</button>
                         <button v-else type="button" class="btn btn-secondary" :disabled="isButtonDisabled"
                           @click="agregarCarrito">Agregar</button>
                       </div>
@@ -223,8 +275,13 @@ function insertarVenta() {
                     <div class="col-sm-4">
                       <div class="mb-2">
                         <label class="form-label">Cantidad</label>
-                        <input type="number" class="form-control" v-model="productoSeccionado.cantidad">
+                        <input type="number" class="form-control" min="0" v-model="productoSeccionado.cantidad">
                       </div>
+                    </div>
+                  </div>
+                  <div class="mb-2">
+                    <div v-if="msgP" class="alert alert-danger" role="alert">
+                      {{ msgP }}
                     </div>
                   </div>
                 </form>
@@ -251,15 +308,16 @@ function insertarVenta() {
                         <td colspan="100%">No se encontraron datos</td>
                       </tr>
                       <!-- <tr v-else class="text-center align-middle" v-for="venta in detalleProducto" :key="detalleProducto.id"> -->
-                      <tr v-else class="text-center align-middle" v-for="(venta, indice) in detalleProducto" :key="indice">
+                      <tr v-else class="text-center align-middle" v-for="(venta, indice) in detalleProducto"
+                        :key="indice">
                         <!-- <td>{{ venta.id_producto }}</td> -->
                         <td class="text-start">{{ venta.nombre }} - {{ venta.marca }} - {{ venta.unidad }}</td>
                         <td>{{ venta.cantidad }}</td>
                         <td>S/. {{ venta.precio_venta }}</td>
                         <td>S/. {{ (venta.cantidad * venta.precio_venta).toFixed(2) }}</td>
                         <td>
-                          <a href="#" data-toggle="tooltip" title="Editar" @click="editarProducto(indice, venta)"><img src="@/assets/icons/pencil.svg"
-                              width="15" /></a>
+                          <a href="#" data-toggle="tooltip" title="Editar" @click="editarProducto(indice, venta)"><img
+                              src="@/assets/icons/pencil.svg" width="15" /></a>
                         </td>
                         <td>
                           <a href="#" data-toggle="tooltip" title="Eliminar" @click="eliminarProducto(indice)"><img
@@ -324,9 +382,14 @@ function insertarVenta() {
                       </div>
                     </div>
                   </div>
+                  <div class="mb-2">
+                    <div v-if="msg" class="alert alert-danger" role="alert">
+                      {{ msg }}
+                    </div>
+                  </div>
                   <div class="d-flex justify-content-center mb-2">
-                    <button type="button" class="btn btn-primary btn-report me-3"
-                      :disabled="isButtonDisabled" @click="GuardarVenta">Guardar</button>
+                    <button type="button" class="btn btn-primary btn-report me-3" :disabled="isButtonDisabled"
+                      @click="GuardarVenta">Guardar</button>
                     <button type="button" class="btn btn-primary btn-report" @click="regresar">Cancelar</button>
                   </div>
                 </form>
@@ -338,5 +401,3 @@ function insertarVenta() {
     </div>
   </div>
 </template>
-
-

@@ -62,7 +62,7 @@ function nuevaVenta() {
                 <table class="table table-bordered table-hover" width="100%" cellspacing="0" style="font-size: 14px">
                   <thead>
                     <tr class="text-center align-middle">
-                      <th width="4%" scope="col" class="fw-bold">N°</th>
+                      <th width="4%" scope="col" class="fw-bold">ID</th>
                       <th width="16%" class="fw-bold">BOLETA</th>
                       <th width="10%" class="fw-bold">ITEMS</th>
                       <th width="10%" class="fw-bold">FECHA</th>
