@@ -8,9 +8,10 @@ const dataCompras = ref('')
 const dataVentas = ref('')
 
 const tipoReporte = ref('')
-const fechaInicio = ref('')
-const fechaFin = ref('')
-const msg = ref('')
+const fechaCompras = ref({"fechaInicio": "", "fechaFin": ""})
+const msgC = ref('')
+const fechaVentas = ref({"fechaInicio": "", "fechaFin": ""})
+const msgV = ref('')
 
 async function obtenerProductos() {
   console.log("Obtener datos de los productos")
@@ -49,27 +50,27 @@ async function obtenerUsuarios() {
 
 async function obtenerCompras() {
 
-  msg.value = ''
-  if (fechaInicio.value == '' || fechaFin.value == '') {
-    msg.value = "Por favor, selecciona ambas fechas requeridas para continuar."
+  msgC.value = ''
+  if (fechaCompras.value.fechaInicio == '' || fechaCompras.value.fechaFin == '') {
+    msgC.value = "Por favor, selecciona ambas fechas requeridas para continuar."
     return
   }
 
-  msg.value = ''
-  await fetch(`${import.meta.env.VITE_API_V1}/entrada?fechaInicio=${fechaInicio.value}&fechaFin=${fechaFin.value}`, {
+  msgC.value = ''
+  await fetch(`${import.meta.env.VITE_API_V1}/entrada/reporte?fechaInicio=${fechaCompras.value.fechaInicio}&fechaFin=${fechaCompras.value.fechaFin}`, {
     method: 'GET'
   })
     .then(response => response.json())
     .then(data => {
-      console.log(data)
+      // console.log(data)
       if (data.length == 0) {
-        msg.value = "Sin resultados para el rango de fechas seleccionado. Intenta con otro rango de fechas."
+        msgC.value = "Sin resultados para el rango de fechas seleccionado. Intenta con otro rango de fechas."
       } else {
         dataCompras.value = data
       }
     })
     .catch(error => {
-      msg.value = "Error del servicio al verificar los datos"
+      msgC.value = "Error del servicio al verificar los datos"
     })
 
   if (dataCompras.value != '') {
@@ -78,15 +79,48 @@ async function obtenerCompras() {
     const exportType = exportFromJSON.types.xls
 
     exportFromJSON({ data, fileName, exportType })
+    dataCompras.value = ''
+    fechaCompras.value.fechaInicio = ''
+    fechaCompras.value.fechaFin = ''
   }
 
 }
+
 async function obtenerVentas() {
+  msgV.value = ''
+  if (fechaVentas.value.fechaInicio == '' || fechaVentas.value.fechaFin == '') {
+    msgV.value = "Por favor, selecciona ambas fechas requeridas para continuar."
+    return
+  }
 
-}
+  msgV.value = ''
+  await fetch(`${import.meta.env.VITE_API_V1}/venta/reporte?fechaInicio=${fechaVentas.value.fechaInicio}&fechaFin=${fechaVentas.value.fechaFin}`, {
+    method: 'GET'
+  })
+    .then(response => response.json())
+    .then(data => {
+      // console.log(data)
+      if (data.length == 0) {
+        msgV.value = "Sin resultados para el rango de fechas seleccionado. Intenta con otro rango de fechas."
+      } else {
+        dataVentas.value = data
+      }
+    })
+    .catch(error => {
+      msgV.value = "Error del servicio al verificar los datos"
+    })
 
-function haceralgo() {
-  console.log("PRPBANDO: ", tipoReporte.value)
+  if (dataVentas.value != '') {
+    const data = dataVentas.value
+    const fileName = 'reportVentas'
+    const exportType = exportFromJSON.types.xls
+
+    exportFromJSON({ data, fileName, exportType })
+    dataVentas.value = ''
+    fechaVentas.value.fechaInicio = ''
+    fechaVentas.value.fechaFin = ''
+  }
+
 }
 
 </script>
@@ -129,14 +163,14 @@ function haceralgo() {
                   <div class="d-flex">
                     <div class="input-group">
                       <span class="input-group-text">Desde</span>
-                      <input type="date" class="form-control datepicker" min="2023-07-01" v-model="fechaInicio">
+                      <input type="date" class="form-control datepicker" min="2023-07-01" v-model="fechaCompras.fechaInicio">
                       <span class="input-group-text">Hasta</span>
-                      <input type="date" class="form-control datepicker" :min="fechaInicio" v-model="fechaFin">
+                      <input type="date" class="form-control datepicker" :min="fechaCompras.fechaInicio" v-model="fechaCompras.fechaFin">
                     </div>
                   </div>
                   <div class="mt-3">
-                    <div v-if="msg" class="alert alert-danger" role="alert">
-                      {{ msg }}
+                    <div v-if="msgC" class="alert alert-danger" role="alert">
+                      {{ msgC }}
                     </div>
                   </div>
                   <div class="d-flex justify-content-center mt-2">
@@ -153,11 +187,16 @@ function haceralgo() {
                   <div class="d-flex">
                     <div class="input-group">
                       <span class="input-group-text">Desde</span>
-                      <input type="date" class="form-control datepicker" min="2023-07-01" v-model="fechaInicio">
+                      <input type="date" class="form-control datepicker" min="2023-07-01" v-model="fechaVentas.fechaInicio">
                       <span class="input-group-text">Hasta</span>
-                      <input type="date" class="form-control datepicker" :min="fechaInicio" v-model="fechaFin">
+                      <input type="date" class="form-control datepicker" :min="fechaVentas.fechaInicio" v-model="fechaVentas.fechaFin">
                     </div>
                   </div>
+                  <div class="mt-3">
+                      <div v-if="msgV" class="alert alert-danger" role="alert">
+                        {{ msgV }}
+                      </div>
+                    </div>
                   <div class="d-flex justify-content-center mt-2">
                     <button type="button" class="btn btn-primary btn-report" @click="obtenerVentas">
                       <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
