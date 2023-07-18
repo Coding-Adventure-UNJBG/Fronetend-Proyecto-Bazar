@@ -45,8 +45,8 @@ const buscar = () => {
 
 const filtrarBusqueda = computed(() => {
   const search = queBuscar.value === 'producto' ? dataBuscarProducto.value.toLowerCase() : dataBuscarProveedor.value.toLowerCase()
-  const resultados = Object.values(datosBusqueda.value);
-  return search ? resultados.filter(resultado => resultado.nombre.toLowerCase().includes(search)) : [];
+  const resultados = Object.values(datosBusqueda.value)
+  return search ? resultados.filter(resultado => resultado.nombre.toLowerCase().includes(search) && resultado.estado != 'DESHABILITADO') : [];
 })
 
 //Buscar proveedor
