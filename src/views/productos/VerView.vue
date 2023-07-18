@@ -5,12 +5,13 @@ import { useRouter, useRoute } from 'vue-router';
 
 const router = useRoute()
 const rutas = useRouter()
-
-const dataProductos = ref({ "id_producto": "0", "nombre": "", "medida": "", "marca": "", "tipo_unidad": "", "cantidad_unidad": "", "foto": "" })
+const limite = ref('')
+const dataProductos = ref({ "id_producto": "", "nombre": "", "marca": "", "unidad": "", "estado": "", "stock": "", "foto": "", "comentario": "" })
 const msg = ref('')
 
 onMounted(() => {
   cargarData()
+  totalProductos()
 })
 
 function cargarData() {
@@ -37,22 +38,35 @@ function cargarData() {
     )
 }
 
+async function totalProductos() {
+  await fetch(`${import.meta.env.VITE_API_V1}/producto/obtener/id`, {
+    method: 'GET'
+  })
+    .then(response => response.json())
+    .then(data => {
+      limite.value = parseInt(data[0].id, 10)
+      // console.log(limite.value)
+    })
+    .catch(error => {
+      msg.value = "Error del servicio al obtener el último ID"
+    })
+}
+
 function regresar() {
   rutas.push({ name: 'productos' })
 }
 
 function siguienteProducto() {
-  const pId = parseInt(router.params.id) + 1
-  router.params.id = parseInt(router.params.id) + 1;
-  cargarData()
-  rutas.replace({ name: 'productover', params: { id: pId } })
+  const tempId = parseInt(router.params.id)
+  if (tempId < limite.value) {
+    const pId = tempId + 1
+    router.params.id = pId
+    cargarData()
+    rutas.replace({ name: 'productover', params: { id: pId } })
+  }
 }
 
 function anteriorProducto() {
-  // const pId = parseInt(router.params.id) - 1
-  // router.params.id = parseInt(router.params.id) - 1;
-  // cargarData()
-  // rutas.replace({ name: 'productover', params: { id: pId } })
   const tempId = parseInt(router.params.id);
   if (tempId > 1) {
     const pId = tempId - 1;
@@ -67,7 +81,6 @@ function anteriorProducto() {
 <template>
   <Navegacion />
 
-
   <div class="container__principal">
     <div class="vista-principal">
       <div class="container__vista-principal">
@@ -81,50 +94,42 @@ function anteriorProducto() {
                   </div>
                   <form>
                     <div class="mb-2">
-                      <label for="formNombre" class="form-label">Nombre</label>
-                      <input type="text" class="form-control" id="formNombre" v-model="dataProductos.nombre" disabled>
+                      <label class="form-label">Nombre</label>
+                      <input type="text" class="form-control" v-model="dataProductos.nombre" disabled>
                     </div>
                     <div class="mb-2">
-                      <label for="formMarca" class="form-label">Marca</label>
-                      <input type="text" class="form-control" id="formMarca" v-model="dataProductos.marca" disabled>
+                      <label class="form-label">Marca</label>
+                      <input type="text" class="form-control" v-model="dataProductos.marca" disabled>
                     </div>
                     <div class="mb-2">
-                      <label for="formMedida" class="form-label">Medida</label>
-                      <input type="text" class="form-control" id="formMedida" v-model="dataProductos.medida" disabled>
+                      <label class="form-label">Unidad</label>
+                      <input type="text" class="form-control" v-model="dataProductos.unidad" disabled>
                     </div>
                     <div class="row">
                       <div class="col-md-6">
                         <div class="mb-2">
-                          <label for="formUnidad" class="form-label">Tipo de unidad</label>
-                          <input type="text" class="form-control" id="formUnidad" v-model="dataProductos.tipo_unidad"
-                            disabled>
+                          <label class="form-label">Stock</label>
+                          <input type="text" class="form-control" v-model="dataProductos.stock" disabled>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="mb-2">
-                          <label for="formCantidad" class="form-label">Cantidad por unidad</label>
-                          <input type="number" class="form-control" id="formCantidad"
-                            v-model="dataProductos.cantidad_unidad" disabled>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="mb-2">
-                          <label for="formStock" class="form-label">Stock</label>
-                          <input type="text" class="form-control" id="formStock" v-model="dataProductos.stock" disabled>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="mb-2">
-                          <label for="formEstado" class="form-label">Estado</label>
-                          <input type="text" class="form-control" id="formEstado" v-model="dataProductos.estado" disabled>
+                          <label class="form-label">Estado</label>
+                          <input type="text" class="form-control" v-model="dataProductos.estado" disabled>
                         </div>
                       </div>
                     </div>
 
-                    <div v-if="msg" class="mb-4 text-center">
-                      <h5 class="text-black bg-info fw-bold p-2"> {{ msg }}</h5>
+                    <div class="mb-2">
+                      <label class="form-label">Comentario</label>
+                      <textarea class="form-control" rows="1" style="max-height: 90px;"
+                        v-model="dataProductos.comentario" disabled></textarea>
+                    </div>
+
+                    <div class="mb-2 mt-3">
+                      <div v-if="msg" class="form-control alert alert-danger text-center fw-bold" role="alert">
+                        {{ msg }}
+                      </div>
                     </div>
 
                     <div class="d-flex justify-content-center mt-3">
@@ -138,7 +143,7 @@ function anteriorProducto() {
                 <div class="card-body">
                   <h5 class="mb-4 mt-4 text-center">Imagen del producto</h5>
                   <div class="image__product">
-                    <img v-bind:src="dataProductos.foto" alt="" class="img-fluid img-thumbnail"/>
+                    <img v-bind:src="dataProductos.foto" alt="" class="img-fluid img-thumbnail" />
                   </div>
 
                   <div class="d-flex justify-content-center pt-4 mb-2">

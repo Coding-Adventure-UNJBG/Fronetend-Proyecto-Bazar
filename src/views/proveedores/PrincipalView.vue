@@ -38,6 +38,20 @@ function buscarProveedor() {
     })
 }
 
+async function deshabilitarProveedor(uId, estado) {
+  await fetch(`${import.meta.env.VITE_API_V1}/proveedor/${uId}`, {
+    method: 'PATCH',
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: JSON.stringify({ "estado": `${estado}` })
+  })
+    .then(response => response.json())
+    .then(data => {
+      cargarData()
+    })
+}
+
 function nuevoProveedor() {
   router.push({ name: 'proveedornuevo' })
 }
@@ -116,7 +130,7 @@ function verProveedor(uId) {
                             class="logo" src="@/assets/icons/pencil.svg" width="15" /></a>
                       </td>
                       <td>
-                        <a href="#" data-toggle="tooltip" title="Eliminar"><img alt="Vue logo" class="logo"
+                        <a href="#" data-toggle="tooltip" title="Eliminar" @click="deshabilitarProveedor(item.id_proveedor, item.estado)"><img alt="Vue logo" class="logo"
                             src="@/assets/icons/delete.svg" width="15" /></a>
                       </td>
                     </tr>

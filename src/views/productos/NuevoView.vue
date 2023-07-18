@@ -8,13 +8,14 @@ const isButtonDisabled = ref(false)
 const imagen = ref('/src/assets/test.png')
 const fileInput = ref('')
 const msg = ref('')
-const datosProducto = ref({ "nombre": "", "medida": "", "marca": "", "tipo_unidad": 2, "cantidad_unidad": 1, "foto": "" })
+const datosProducto = ref({ "nombre": "", "marca": "", "unidad": "", "foto": "", "comentario": "" })
 
 function filechange(archivo) {
   fileInput.value = archivo.target.files[0]
   imagen.value = URL.createObjectURL(fileInput.value)
-  console.log(fileInput.value)
+  // console.log(fileInput.value)
 }
+
 function cancelar() {
   router.push({ name: 'productos' })
 }
@@ -24,7 +25,7 @@ async function guardarProductos() {
   const unixTimestamp = Date.now();
   //console.log(unixTimestamp)
   if (fileInput.value) {// solo guardaremos una imagen si el usuario intenta cargar una
-    console.log(fileInput.value.type.split('.').pop())
+    // console.log(fileInput.value.type.split('.').pop())
     datosProducto.value.foto = fileInput.value.type.split('.').pop()
     datosProducto.value.foto = `${import.meta.env.VITE_API}/photos/op-producto-${unixTimestamp}.${datosProducto.value.foto}`
     await guardarImagen(unixTimestamp)
@@ -36,8 +37,8 @@ async function guardarProductos() {
 }
 
 async function guardarDatos() {
-  console.log("datos del producto")
-  console.log(JSON.stringify(datosProducto.value))
+  // console.log("datos del producto")
+  // console.log(JSON.stringify(datosProducto.value))
   await fetch(import.meta.env.VITE_API_V1 + `/producto/`, {
     method: 'POST',
     headers: {
@@ -60,10 +61,10 @@ async function guardarDatos() {
 }
 
 async function guardarImagen(unixTimestamp) {
-  console.log("guardando imagen del producto")
+  // console.log("guardando imagen del producto")
 
   const formData = new FormData();
-  console.log(fileInput.value)
+  // console.log(fileInput.value)
   formData.append('imagen', fileInput.value);
 
   console.log(formData)
@@ -110,32 +111,14 @@ async function guardarImagen(unixTimestamp) {
                     <div class="row">
                       <div class="col-md-6">
                         <div class="mb-2">
-                          <label for="formMedida" class="form-label">Medida</label>
-                          <input type="text" class="form-control" id="formMedida" v-model="datosProducto.medida">
+                          <label for="formMedida" class="form-label">Unidad</label>
+                          <input type="text" class="form-control" id="formMedida" v-model="datosProducto.unidad">
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="mb-2">
                           <label for="formImg" class="form-label">Subir imagen</label>
                           <input type="file" class="form-control" id="formImg" accept=".jpg, .png" @change="filechange">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="mb-2">
-                          <label for="formUnidad" class="form-label">Tipo de unidad</label>
-                          <select class="form-select" id="formUnidad" v-model="datosProducto.tipo_unidad">
-                            <option selected value="2">Unidad</option>
-                            <option value="1">Paquete</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="mb-2">
-                          <label for="formCantidad" class="form-label">Cantidad por unidad</label>
-                          <input type="number" class="form-control" id="formCantidad" min="1" max="350" step="1"
-                            v-model="datosProducto.cantidad_unidad">
                         </div>
                       </div>
                     </div>
@@ -149,13 +132,21 @@ async function guardarImagen(unixTimestamp) {
                       <div class="col-md-6">
                         <div class="mb-2">
                           <label for="formEstado" class="form-label">Estado</label>
-                          <input type="text" class="form-control" id="formEstado" value="no-disponible" disabled>
+                          <input type="text" class="form-control" id="formEstado" value="AGOTADO" disabled>
                         </div>
                       </div>
                     </div>
 
-                    <div v-if="msg" class="mb-4 text-center">
-                      <h5 class="text-black bg-info fw-bold p-2"> {{ msg }}</h5>
+                    <div class="mb-2">
+                      <label class="form-label">Comentario</label>
+                      <textarea class="form-control" rows="1" style="max-height: 90px;"
+                        v-model="datosProducto.comentario"></textarea>
+                    </div>
+
+                    <div class="mb-2 mt-3">
+                      <div v-if="msg" class="form-control alert alert-danger text-center fw-bold" role="alert">
+                        {{ msg }}
+                      </div>
                     </div>
 
                     <div class="d-flex justify-content-center mt-3">
