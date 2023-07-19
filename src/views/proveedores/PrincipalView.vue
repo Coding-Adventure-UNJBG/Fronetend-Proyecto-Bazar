@@ -39,17 +39,33 @@ function buscarProveedor() {
 }
 
 async function deshabilitarProveedor(uId, estado) {
-  await fetch(`${import.meta.env.VITE_API_V1}/proveedor/${uId}`, {
-    method: 'PATCH',
-    headers: {
-      "Content-type": "application/json"
-    },
-    body: JSON.stringify({ "estado": `${estado}` })
+  const deshabilitar = await swal({
+    title: "Estas seguro?",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
   })
-    .then(response => response.json())
-    .then(data => {
-      cargarData()
+
+  if (deshabilitar) {
+    await fetch(`${import.meta.env.VITE_API_V1}/proveedor/${uId}`, {
+      method: 'PATCH',
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({ "estado": `${estado}` })
     })
+      .then(response => response.json())
+      .then(data => {
+        let mestado = estado == 'HABILITADO' ? 'deshabilitado' : 'habilitado'
+        swal("", `El proveedor ha sido ${mestado}!`, "success")
+        cargarData()
+      })
+      .catch(error => {
+        swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
+      })
+  } else {
+    return
+  }
 }
 
 function nuevoProveedor() {
@@ -61,7 +77,7 @@ function editarProveedor(uId) {
 }
 
 function verProveedor(uId) {
-  router.push({ name: 'proveedorver', params: { id: uId }})
+  router.push({ name: 'proveedorver', params: { id: uId } })
 }
 </script>
 
@@ -122,15 +138,17 @@ function verProveedor(uId) {
                       <td>{{ item.fecha_registro }}</td>
                       <td>{{ item.comentario }}</td>
                       <td>
-                        <a href="#" data-toggle="tooltip" title="Ver Proveedor" @click="verProveedor(item.id_proveedor)"><img alt="Vue logo" class="logo"
+                        <a href="#" data-toggle="tooltip" title="Ver Proveedor"
+                          @click="verProveedor(item.id_proveedor)"><img alt="Vue logo" class="logo"
                             src="@/assets/icons/ojo.svg" width="15" /></a>
                       </td>
                       <td>
-                        <a href="#" data-toggle="tooltip" title="Editar" @click="editarProveedor(item.id_proveedor)"><img alt="Vue logo"
-                            class="logo" src="@/assets/icons/pencil.svg" width="15" /></a>
+                        <a href="#" data-toggle="tooltip" title="Editar" @click="editarProveedor(item.id_proveedor)"><img
+                            alt="Vue logo" class="logo" src="@/assets/icons/pencil.svg" width="15" /></a>
                       </td>
                       <td>
-                        <a href="#" data-toggle="tooltip" title="Eliminar" @click="deshabilitarProveedor(item.id_proveedor, item.estado)"><img alt="Vue logo" class="logo"
+                        <a href="#" data-toggle="tooltip" title="Eliminar"
+                          @click="deshabilitarProveedor(item.id_proveedor, item.estado)"><img alt="Vue logo" class="logo"
                             src="@/assets/icons/delete.svg" width="15" /></a>
                       </td>
                     </tr>
