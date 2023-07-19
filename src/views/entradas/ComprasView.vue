@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router';
 import Navegacion from '../../components/Navegacion.vue'
 import { onMounted, ref, computed } from 'vue';
+import swal from 'sweetalert';
 
 const router = useRouter()
 const isButtonDisabled = ref(false)
@@ -18,7 +19,6 @@ const dataBuscarProveedor = ref('')
 const productoSeccionado = ref('')
 const proveedorSeccionado = ref('')
 
-
 const totalCompra = computed(() => {
   const cantidad = Number(datosCompra.value.cantidad);
   const precio = Number(datosCompra.value.precio_compra);
@@ -32,7 +32,7 @@ function cargarBusqueda() {
   })
     .then(response => response.json())
     .then(data => {
-      console.log(data)
+      // console.log(data)
       datosBusqueda.value = data
     })
 }
@@ -67,7 +67,7 @@ function seleccionarProveedor(proveedor) {
   showResults.value = false
   proveedorSeccionado.value = proveedor
   datosCompra.value.id_proveedor = proveedor.id_proveedor
-  console.log(datosCompra.value)
+  // console.log(datosCompra.value)
 }
 
 //Buscar producto
@@ -88,7 +88,7 @@ function seleccionarProducto(producto) {
   showResults.value = false
   productoSeccionado.value = producto
   datosCompra.value.id_producto = producto.id_producto
-  console.log(datosCompra.value)
+  // console.log(datosCompra.value)
 }
 
 //Validacion de campos
@@ -102,28 +102,27 @@ async function guardarEntrada() {
     }
   }
   if (msg.value) {
-    msg.value = "Error: campos requeridos -> " + msg.value
+    msg.value = ''
+    swal("Ups, algo salio mal", "Por favor, completa todos los campos requeridos", "warning")
+    // msg.value = "Error: campos requeridos -> " + msg.value
     isButtonDisabled.value = false
     return
   }
 
-  msg.value = ''
   if (datosCompra.value.cantidad <= 0) {
-    msg.value = 'Error: Ingrese una valor válido para el campo "Cantidad"'
+    swal("Ups, algo salio mal", "La cantidad de productos no puede ser negativa o cero", "error")
     isButtonDisabled.value = false
     return
   }
 
-  msg.value = ''
   if (datosCompra.value.precio_compra <= 0) {
-    msg.value = 'Error: Ingrese una valor válido para el campo "Precio Unitario"'
+    swal("Ups, algo salio mal", "El precio del producto no puede ser negativa o cero", "error")
     isButtonDisabled.value = false
     return
   }
 
-  msg.value = ''
   if (datosCompra.value.costo_operacion < 0) {
-    msg.value = 'Error: Ingrese una valor válido para el campo "Costo de operación"'
+    swal("Ups, algo salio mal", "El costo de operación no puede ser negativa", "error")
     isButtonDisabled.value = false
     return
   }
@@ -143,9 +142,11 @@ function insertarCompra() {
     .then(response => response.json())
     .then(data => {
       if (data.hasOwnProperty("message")) {
+        swal("", "La compra fue registrada correctamente", "success")
         msg.value = data.message
         cancelar()
       } else {
+        swal("Ups, algo salio mal", data.error, "error")
         msg.value = data.error
       }
     })
@@ -172,7 +173,9 @@ function cancelar() {
                 <div class="col-sm-4">
                   <form>
                     <div class="mb-2">
-                      <span class="fw-bold">Datos del producto</span>
+                      <span class="fw-bold">Datos del producto
+                        <span style="color: red;">*</span>
+                      </span>
                     </div>
                     <div class="mb-2">
                       <div class="search-container">
@@ -217,7 +220,9 @@ function cancelar() {
                 <div class="col-sm-4">
                   <form>
                     <div class="mb-2">
-                      <span class="fw-bold">Datos del proveedor</span>
+                      <span class="fw-bold">Datos del proveedor
+                        <span style="color: red;">*</span>
+                      </span>
                     </div>
                     <div class="mb-2">
                       <div class="search-container">
@@ -270,13 +275,17 @@ function cancelar() {
                   <div class="row">
                     <div class="col-sm-6">
                       <div class="mb-2">
-                        <label class="form-label">Cantidad</label>
+                        <label class="form-label">Cantidad
+                          <span style="color: red;">*</span>
+                        </label>
                         <input type="number" class="form-control" placeholder="0" min="0" v-model="datosCompra.cantidad">
                       </div>
                     </div>
                     <div class="col-sm-6">
                       <div class="mb-2">
-                        <label class="form-label">Precio unitario</label>
+                        <label class="form-label">Precio unitario
+                          <span style="color: red;">*</span>
+                        </label>
                         <div class="input-con-icono-izq">
                           <input type="number" class="form-control text-end" placeholder="0.00" step="0.01" min="0"
                             v-model="datosCompra.precio_compra">
@@ -286,7 +295,9 @@ function cancelar() {
                     </div>
                   </div>
                   <div class="mb-2">
-                    <label class="form-label">Importe total</label>
+                    <label class="form-label">Importe total
+                      <span style="color: red;">*</span>
+                    </label>
                     <div class="input-con-icono-izq">
                       <input type="number" class="form-control text-end"
                         :value="totalCompra" disabled>
@@ -305,9 +316,9 @@ function cancelar() {
                 </div>
 
                 <div class="col-md-12">
-                  <div v-if="msg" class="alert alert-danger" role="alert">
+                  <!-- <div v-if="msg" class="alert alert-danger" role="alert">
                     {{ msg }}
-                  </div>
+                  </div> -->
                   <div class="d-flex justify-content-center mt-3">
                     <button type="button" class="btn btn-primary mx-2" :disabled="isButtonDisabled"
                       @click="guardarEntrada">Guardar</button>
