@@ -2,6 +2,7 @@
 import Navegacion from '../../components/Navegacion.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
+import swal from 'sweetalert';
 
 const router = useRouter()
 const isButtonDisabled = ref(false)
@@ -21,24 +22,36 @@ function cancelar() {
 }
 
 async function guardarProductos() {
+  msg.value = ''
   isButtonDisabled.value = true
+
+  for (var clave in datosProducto.value) {
+    if (datosProducto.value[clave] == '' && clave != "comentario" && clave != "foto") {
+      msg.value += " " + clave + ","
+    }
+  }
+  if (msg.value) {
+    msg.value = ''
+    swal("Ups, algo salio mal", "Por favor, completa todos los campos requeridos", "warning")
+    isButtonDisabled.value = false
+    return
+  }
+
   const unixTimestamp = Date.now();
   //console.log(unixTimestamp)
   if (fileInput.value) {// solo guardaremos una imagen si el usuario intenta cargar una
     // console.log(fileInput.value.type.split('.').pop())
-    datosProducto.value.foto = fileInput.value.type.split('.').pop()
+    datosProducto.value.foto = fileInput.value.name.split('.').pop()
     datosProducto.value.foto = `${import.meta.env.VITE_API}/photos/op-producto-${unixTimestamp}.${datosProducto.value.foto}`
     await guardarImagen(unixTimestamp)
   }
 
-  console.log(datosProducto.value)
+  // console.log(datosProducto.value)
   await guardarDatos()
   isButtonDisabled.value = false
 }
 
 async function guardarDatos() {
-  // console.log("datos del producto")
-  // console.log(JSON.stringify(datosProducto.value))
   await fetch(import.meta.env.VITE_API_V1 + `/producto/`, {
     method: 'POST',
     headers: {
@@ -50,13 +63,16 @@ async function guardarDatos() {
     .then(data => {
       console.log(data)
       if (data.hasOwnProperty("message")) {
-        msg.value = data.message
-        router.push({ name: 'productos' })
-      } else
-        msg.value = data.error
+        swal("", "Producto registrado correctamente", "success")
+        // msg.value = data.message
+        cancelar()
+      } else {
+        swal("Ups, algo salio mal", data.error, "error")
+        // msg.value = data.error
+      }
     })
     .catch(error => {
-      msg.value = "Error del servicio al guardar los datos"
+      swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
     })
 }
 
@@ -74,12 +90,12 @@ async function guardarImagen(unixTimestamp) {
   })
     .then(response => response.json())
     .then(data => {
-      console.log(data)
+      // console.log(data)
     })
     .catch((error) => {
       // Manejar el error de carga de la imagen
-      console.error('Error al cargar la imagen:', error);
-      msg.value = "Error del servicio al guardar los datos"
+      // console.error('Error al cargar la imagen:', error);
+      swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
     })
 
 }
@@ -101,17 +117,23 @@ async function guardarImagen(unixTimestamp) {
                   </div>
                   <form>
                     <div class="mb-2">
-                      <label for="formNombre" class="form-label">Nombre</label>
+                      <label for="formNombre" class="form-label">Nombre
+                        <span style="color: red;">*</span>
+                      </label>
                       <input type="text" class="form-control" id="formNombre" v-model="datosProducto.nombre">
                     </div>
                     <div class="mb-2">
-                      <label for="formMarca" class="form-label">Marca</label>
+                      <label for="formMarca" class="form-label">Marca
+                        <span style="color: red;">*</span>
+                      </label>
                       <input type="text" class="form-control" id="formMarca" v-model="datosProducto.marca">
                     </div>
                     <div class="row">
                       <div class="col-md-6">
                         <div class="mb-2">
-                          <label for="formMedida" class="form-label">Unidad</label>
+                          <label for="formMedida" class="form-label">Unidad
+                            <span style="color: red;">*</span>
+                          </label>
                           <input type="text" class="form-control" id="formMedida" v-model="datosProducto.unidad">
                         </div>
                       </div>
@@ -143,11 +165,11 @@ async function guardarImagen(unixTimestamp) {
                         v-model="datosProducto.comentario"></textarea>
                     </div>
 
-                    <div class="mb-2 mt-3">
+                    <!-- <div class="mb-2 mt-3">
                       <div v-if="msg" class="form-control alert alert-danger text-center fw-bold" role="alert">
                         {{ msg }}
                       </div>
-                    </div>
+                    </div> -->
 
                     <div class="d-flex justify-content-center mt-3">
                       <button type="button" class="btn btn-primary mx-2" :disabled="isButtonDisabled"

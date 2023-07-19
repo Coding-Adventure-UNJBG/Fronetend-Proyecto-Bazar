@@ -1,6 +1,7 @@
 <script setup>
 import Navegacion from '../components/Navegacion.vue'
 import { ref } from 'vue'; import exportFromJSON from 'export-from-json'
+import swal from 'sweetalert';
 
 const dataProductos = ref("")
 const dataUsuarios = ref("")
@@ -8,20 +9,21 @@ const dataCompras = ref('')
 const dataVentas = ref('')
 
 const tipoReporte = ref('')
-const fechaCompras = ref({"fechaInicio": "", "fechaFin": ""})
-const msgC = ref('')
-const fechaVentas = ref({"fechaInicio": "", "fechaFin": ""})
-const msgV = ref('')
+const fechaCompras = ref({ "fechaInicio": "", "fechaFin": "" })
+const fechaVentas = ref({ "fechaInicio": "", "fechaFin": "" })
 
 async function obtenerProductos() {
-  console.log("Obtener datos de los productos")
+  // console.log("Obtener datos de los productos")
   await fetch(`${import.meta.env.VITE_API_V1}/producto`, {
     method: 'GET'
   })
     .then(response => response.json())
     .then(data => {
-      console.log(data)
+      // console.log(data)
       dataProductos.value = data
+    })
+    .catch(error => {
+      swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
     })
 
   const data = dataProductos.value
@@ -29,16 +31,22 @@ async function obtenerProductos() {
   const exportType = exportFromJSON.types.xls
 
   exportFromJSON({ data, fileName, exportType })
+  swal("", "El reporte ha sido generado correctamente!", "success")
+
 }
+
 async function obtenerUsuarios() {
-  console.log("Obtener datos de los productos")
+  // console.log("Obtener datos de los productos")
   await fetch(`${import.meta.env.VITE_API_V1}/usuario`, {
     method: 'GET'
   })
     .then(response => response.json())
     .then(data => {
-      console.log(data)
+      // console.log(data)
       dataUsuarios.value = data
+    })
+    .catch(error => {
+      swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
     })
 
   const data = dataUsuarios.value
@@ -46,17 +54,17 @@ async function obtenerUsuarios() {
   const exportType = exportFromJSON.types.xls
 
   exportFromJSON({ data, fileName, exportType })
+  swal("", "El reporte ha sido generado correctamente!", "success")
+
 }
 
+//"warning", "error", "success" and "info".
 async function obtenerCompras() {
-
-  msgC.value = ''
   if (fechaCompras.value.fechaInicio == '' || fechaCompras.value.fechaFin == '') {
-    msgC.value = "Por favor, selecciona ambas fechas requeridas para continuar."
+    swal("Ups, algo salio mal", "Verifica las fechas ingresadas", "error")
     return
   }
 
-  msgC.value = ''
   await fetch(`${import.meta.env.VITE_API_V1}/entrada/reporte?fechaInicio=${fechaCompras.value.fechaInicio}&fechaFin=${fechaCompras.value.fechaFin}`, {
     method: 'GET'
   })
@@ -64,13 +72,13 @@ async function obtenerCompras() {
     .then(data => {
       // console.log(data)
       if (data.length == 0) {
-        msgC.value = "Sin resultados para el rango de fechas seleccionado. Intenta con otro rango de fechas."
+        swal("Ups, algo salio mal", "Sin resultados para el rango de fechas seleccionado", "error")
       } else {
         dataCompras.value = data
       }
     })
     .catch(error => {
-      msgC.value = "Error del servicio al verificar los datos"
+      swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
     })
 
   if (dataCompras.value != '') {
@@ -79,6 +87,7 @@ async function obtenerCompras() {
     const exportType = exportFromJSON.types.xls
 
     exportFromJSON({ data, fileName, exportType })
+    swal("", "El reporte ha sido generado correctamente!", "success")
     dataCompras.value = ''
     fechaCompras.value.fechaInicio = ''
     fechaCompras.value.fechaFin = ''
@@ -87,13 +96,11 @@ async function obtenerCompras() {
 }
 
 async function obtenerVentas() {
-  msgV.value = ''
   if (fechaVentas.value.fechaInicio == '' || fechaVentas.value.fechaFin == '') {
-    msgV.value = "Por favor, selecciona ambas fechas requeridas para continuar."
+    swal("Ups, algo salio mal", "Verifica las fechas ingresadas", "error")
     return
   }
 
-  msgV.value = ''
   await fetch(`${import.meta.env.VITE_API_V1}/venta/reporte?fechaInicio=${fechaVentas.value.fechaInicio}&fechaFin=${fechaVentas.value.fechaFin}`, {
     method: 'GET'
   })
@@ -101,13 +108,13 @@ async function obtenerVentas() {
     .then(data => {
       // console.log(data)
       if (data.length == 0) {
-        msgV.value = "Sin resultados para el rango de fechas seleccionado. Intenta con otro rango de fechas."
+        swal("Ups, algo salio mal", "Sin resultados para el rango de fechas seleccionado", "error")
       } else {
         dataVentas.value = data
       }
     })
     .catch(error => {
-      msgV.value = "Error del servicio al verificar los datos"
+      swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
     })
 
   if (dataVentas.value != '') {
@@ -116,6 +123,7 @@ async function obtenerVentas() {
     const exportType = exportFromJSON.types.xls
 
     exportFromJSON({ data, fileName, exportType })
+    swal("", "El reporte ha sido generado correctamente!", "success")
     dataVentas.value = ''
     fechaVentas.value.fechaInicio = ''
     fechaVentas.value.fechaFin = ''
@@ -163,14 +171,11 @@ async function obtenerVentas() {
                   <div class="d-flex">
                     <div class="input-group">
                       <span class="input-group-text">Desde</span>
-                      <input type="date" class="form-control datepicker" min="2023-07-01" v-model="fechaCompras.fechaInicio">
+                      <input type="date" class="form-control datepicker" min="2023-07-01"
+                        v-model="fechaCompras.fechaInicio">
                       <span class="input-group-text">Hasta</span>
-                      <input type="date" class="form-control datepicker" :min="fechaCompras.fechaInicio" v-model="fechaCompras.fechaFin">
-                    </div>
-                  </div>
-                  <div class="mt-3">
-                    <div v-if="msgC" class="alert alert-danger" role="alert">
-                      {{ msgC }}
+                      <input type="date" class="form-control datepicker" :min="fechaCompras.fechaInicio"
+                        v-model="fechaCompras.fechaFin">
                     </div>
                   </div>
                   <div class="d-flex justify-content-center mt-2">
@@ -187,16 +192,13 @@ async function obtenerVentas() {
                   <div class="d-flex">
                     <div class="input-group">
                       <span class="input-group-text">Desde</span>
-                      <input type="date" class="form-control datepicker" min="2023-07-01" v-model="fechaVentas.fechaInicio">
+                      <input type="date" class="form-control datepicker" min="2023-07-01"
+                        v-model="fechaVentas.fechaInicio">
                       <span class="input-group-text">Hasta</span>
-                      <input type="date" class="form-control datepicker" :min="fechaVentas.fechaInicio" v-model="fechaVentas.fechaFin">
+                      <input type="date" class="form-control datepicker" :min="fechaVentas.fechaInicio"
+                        v-model="fechaVentas.fechaFin">
                     </div>
                   </div>
-                  <div class="mt-3">
-                      <div v-if="msgV" class="alert alert-danger" role="alert">
-                        {{ msgV }}
-                      </div>
-                    </div>
                   <div class="d-flex justify-content-center mt-2">
                     <button type="button" class="btn btn-primary btn-report" @click="obtenerVentas">
                       <font-awesome-icon :icon="['fas', 'magnifying-glass']" />

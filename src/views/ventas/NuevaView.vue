@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router';
 import Navegacion from '../../components/Navegacion.vue'
 import { onMounted, ref, computed } from 'vue'
+import swal from 'sweetalert';
 
 const router = useRouter()
 const isButtonDisabled = ref(false)
@@ -15,8 +16,6 @@ const detalleProducto = ref([])
 const datosVenta = ref({ "serie": "001", "correlativo": "", "tipo_pago": "EFECTIVO", "total_dinero": "0.00", "comentario": "" })
 const showEdit = ref(false)
 const idEditar = ref('')
-const msgP = ref('')
-const msg = ref('')
 
 const totalStock = ref('')
 
@@ -30,12 +29,13 @@ async function obtenerCorrelativo() {
   })
     .then(response => response.json())
     .then(data => {
-      console.log(data)
+      // console.log(data)
       let corr = parseInt(data[0].correlativo, 10) + 1
       datosVenta.value.correlativo = corr.toString().padStart(6, 0)
     })
     .catch(error => {
-      msg.value = "Error del servicio al obtener el último ID"
+      swal("Ups, algo salio mal", "Problemas internos con el servidor al obtener el último correlativo", "warning")
+      // msg.value = "Error del servicio al obtener el último ID"
     })
 }
 
@@ -91,25 +91,23 @@ function agregarCarrito() {
   isButtonDisabled.value = true
 
   //Validación detalle compra
-  msgP.value = ''
   if (!productoSeccionado.value || !productoSeccionado.value.cantidad) {
-    msgP.value = "Error: Los campos no pueden estar vacios"
-    isButtonDisabled.value = false
-    return
-  }
-  msgP.value = ''
-  if (productoSeccionado.value.cantidad <= 0 || productoSeccionado.value.cantidad > totalStock.value) {
-    msgP.value = "Error: Ingrese una cantidad válida"
+    swal("Ups, algo salio mal", "Los datos del producto no pueden estar vacios", "error")
     isButtonDisabled.value = false
     return
   }
 
-  // console.log(productoSeccionado.value)
+  if (productoSeccionado.value.cantidad <= 0 || productoSeccionado.value.cantidad > totalStock.value) {
+    swal("Ups, algo salio mal", "Cantidad inválida. No se permiten valores negativos ni superiores al stock disponible.", "error")
+    isButtonDisabled.value = false
+    return
+  }
+
   detalleProducto.value.push(productoSeccionado.value)
+  swal("", "El producto ha sido añadido a la venta.", "success")
   productoSeccionado.value = ''
   dataBuscarProducto.value = ''
   isButtonDisabled.value = false
-  // console.log(detalleProducto.value)
 }
 
 function editarProducto(id, producto) {
@@ -120,25 +118,23 @@ function editarProducto(id, producto) {
 }
 
 function GuardarProducto() {
-  // console.log(productoSeccionado.value)
-
   isButtonDisabled.value = true
 
   //Validaciones
-  msgP.value = ''
   if (!productoSeccionado.value || !productoSeccionado.value.cantidad) {
-    msgP.value = "Error: Los campos no pueden estar vacios"
+    swal("Ups, algo salio mal", "Los datos del producto no pueden estar vacios", "error")
     isButtonDisabled.value = false
     return
   }
-  msgP.value = ''
+
   if (productoSeccionado.value.cantidad <= 0 || productoSeccionado.value.cantidad > totalStock.value) {
-    msgP.value = "Error: Ingrese una cantidad válida"
+    swal("Ups, algo salio mal", "Cantidad inválida. No se permiten valores negativos ni superiores al stock disponible.", "error")
     isButtonDisabled.value = false
     return
   }
 
   detalleProducto.value[idEditar.value] = productoSeccionado.value
+  swal("", "El producto ha sido actualizado en la venta.", "success")
   productoSeccionado.value = ''
   idEditar.value = ''
   showEdit.value = false //Para ocultar el boton guardar
@@ -146,20 +142,32 @@ function GuardarProducto() {
   isInputDisabled.value = false
 }
 
-function eliminarProducto(id) {
-  detalleProducto.value.splice(id, 1)
-  // console.log(detalleProducto.value)
+async function eliminarProducto(id) {
+  const eliminar = await swal({
+    title: "Estas seguro?",
+    text: "El producto se eliminará de la venta!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  })
+
+  if (eliminar) {
+    detalleProducto.value.splice(id, 1)
+    swal("", "El producto ha sido eliminado de la venta.", "success")
+  } else {
+    return
+  }
 }
 
 async function GuardarVenta() {
 
-  msg.value = ''
   isButtonDisabled.value = true
   if (detalleProducto.value == '') {
-    msg.value = "Error: Ingrese al menos un producto"
+    swal("Ups, algo salio mal", "Debe existir al menos un producto en la venta", "error")
     isButtonDisabled.value = false
     return
   }
+
   datosVenta.value.total_dinero = totalProductos
   // Unir las dos variables
   datosVenta.value = {
@@ -167,7 +175,7 @@ async function GuardarVenta() {
     detalleVenta: detalleProducto.value
   }
 
-  console.log(datosVenta.value)
+  // console.log(datosVenta.value)
   await insertarVenta()
   isButtonDisabled.value = false
 }
@@ -183,14 +191,15 @@ function insertarVenta() {
     .then(response => response.json())
     .then(data => {
       if (data.hasOwnProperty("message")) {
-        msg.value = data.message
+        swal("", "La venta fue registrada correctamente", "success")
+        // msg.value = data.message
         regresar()
       } else {
-        msg.value = data.error
+        swal("Ups, algo salio mal", data.error, "error")  
       }
     })
     .catch(error => {
-      msg.value = "Error del servicio al guardar los datos"
+      swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
     })
 }
 
@@ -277,11 +286,6 @@ function regresar() {
                         <label class="form-label">Cantidad</label>
                         <input type="number" class="form-control" min="0" v-model="productoSeccionado.cantidad">
                       </div>
-                    </div>
-                  </div>
-                  <div class="mb-2">
-                    <div v-if="msgP" class="alert alert-danger" role="alert">
-                      {{ msgP }}
                     </div>
                   </div>
                 </form>
@@ -380,11 +384,6 @@ function regresar() {
                         <label class="form-label" style="float: right; padding-right: 15px;">S/. {{
                           totalProductos }}</label>
                       </div>
-                    </div>
-                  </div>
-                  <div class="mb-2">
-                    <div v-if="msg" class="alert alert-danger" role="alert">
-                      {{ msg }}
                     </div>
                   </div>
                   <div class="d-flex justify-content-center mb-2">

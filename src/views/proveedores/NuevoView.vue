@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router';
 import Navegacion from '../../components/Navegacion.vue'
 import { onMounted, ref } from 'vue';
+import swal from 'sweetalert';
 
 const router = useRouter()
 const msg = ref('')
@@ -21,7 +22,8 @@ async function obtenerIdProveedor() {
       datosProveedor.value.id_proveedor = parseInt(data[0].id, 10) + 1
     })
     .catch(error => {
-      msg.value = "Error del servicio al obtener el último ID"
+      swal("Ups, algo salio mal", "Problemas internos con el servidor al obtener el último ID", "warning")
+      // msg.value = "Error del servicio al obtener el último ID"
     })
 }
 
@@ -31,17 +33,16 @@ async function obtenerIdProveedor() {
     })
       .then(response => response.json())
       .then(data => {
-        //console.log(data)
         if (data.hasOwnProperty("error")) {
+          swal("Ups, algo salio mal", data.error, "error")
           msg.value = data.error
-          //console.log("1 error")
         } else {
           msg.value = ''
-          //console.log("2 error")
         }
       })
       .catch(error => {
-        msg.value = "v-Error del servicio al verificar los datos"
+        swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
+        // msg.value = "v-Error del servicio al verificar los datos"
       })
 }
 
@@ -49,9 +50,22 @@ async function registrarProveedor() {
   msg.value = ''
   isButtonDisabled.value = true
 
-  // console.log(((datosProveedor.value.ruc).toString()).length)
+  for (var clave in datosProveedor.value) {
+    if (datosProveedor.value[clave] == '' && clave != "comentario" && clave != "razon_social" && clave != "direccion") {
+      msg.value += " " + clave + ","
+    }
+  }
+  if (msg.value) {
+    msg.value = ''
+    swal("Ups, algo salio mal", "Por favor, completa todos los campos requeridos", "warning")
+    // msg.value = "Error: campos requeridos -> " + msg.value
+    isButtonDisabled.value = false
+    return
+  }
+
   if (((datosProveedor.value.ruc).toString()).length != 11) {
-    msg.value = 'El RUC debe contener 11 dígitos'
+    swal("Ups, algo salio mal", "El RUC debe contener 11 dígitos", "error")
+    // msg.value = 'El RUC debe contener 11 dígitos'
     isButtonDisabled.value = false
     return
   } else{
@@ -62,24 +76,11 @@ async function registrarProveedor() {
     } 
   }
 
-  for (var clave in datosProveedor.value) {
-    if (datosProveedor.value[clave] == '' && clave != "comentario" && clave != "razon_social" && clave != "direccion") {
-      msg.value += " " + clave + ","
-    }
-  }
-  if (msg.value) {
-    msg.value = "Error: campos requeridos -> " + msg.value
-    isButtonDisabled.value = false
-    return
-  }
-
   await insertarProveedor()
   isButtonDisabled.value = false
 }
 
 async function insertarProveedor() {
-  // console.log("Datos del proveedor")
-  // console.log(JSON.stringify(datosProveedor.value))
   await fetch(`${import.meta.env.VITE_API_V1}/proveedor/`, {
     method: 'POST',
     headers: {
@@ -90,14 +91,17 @@ async function insertarProveedor() {
     .then(response => response.json())
     .then(data => {
       if (data.hasOwnProperty("message")) {
-        msg.value = data.message
+        swal("", "Proveedor registrado correctamente", "success")
+        // msg.value = data.message
         cancelar()
       } else {
-        msg.value = data.error
+        swal("Ups, algo salio mal", data.error, "error")
+        // msg.value = data.error
       }
     })
     .catch(error => {
-      msg.value = "Error del servicio al guardar los datos"
+      swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
+      // msg.value = "Error del servicio al guardar los datos"
     })
 
 }
@@ -130,13 +134,17 @@ function cancelar() {
                   </div>
                   <div class="col-md-6">
                     <div class="mb-2">
-                      <label class="form-label">RUC</label>
+                      <label class="form-label">RUC
+                        <span style="color: red;">*</span>
+                      </label>
                       <input type="number" class="form-control" v-model="datosProveedor.ruc" />
                     </div>
                   </div>
                 </div>
                 <div class="mb-2">
-                  <label class="form-label">Nombre de proveedor</label>
+                  <label class="form-label">Nombre de proveedor
+                    <span style="color: red;">*</span>
+                  </label>
                   <input type="text" class="form-control" v-model="datosProveedor.nombre" />
                 </div>
                 <div class="mb-2">
@@ -147,20 +155,6 @@ function cancelar() {
                   <label class="form-label">Dirección</label>
                   <input type="text" class="form-control" v-model="datosProveedor.direccion" />
                 </div>
-                <!-- <div class="row">
-                  <div class="col-md-6">
-                    <div class="mb-2">
-                      <label class="form-label">Estado</label>
-                      <input type="text" class="form-control" value="deshabilitado" disabled />
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="mb-2">
-                      <label class="form-label">Fecha de registro</label>
-                      <input type="text" class="form-control" disabled />
-                    </div>
-                  </div>
-                </div> -->
                 <div class="mb-2">
                   <label class="form-label">Comentario</label>
                   <textarea class="form-control" rows="1" style="max-height: 90px;"
@@ -168,11 +162,8 @@ function cancelar() {
                 </div>
               </form>
               <div class="col-md-12">
-                <div v-if="msg" class="alert alert-danger" role="alert">
+                <!-- <div v-if="msg" class="alert alert-danger" role="alert">
                   {{ msg }}
-                </div>
-                <!-- <div v-if="msg" class="form-outline px-4 text-center">
-                  <h5 class="text-black bg-info fw-bold p-2"> {{ msg }}</h5>
                 </div> -->
                 <div class="d-flex justify-content-center mt-3">
                   <button type="button" class="btn btn-primary mx-2" :disabled="isButtonDisabled"

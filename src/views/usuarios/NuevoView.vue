@@ -1,4 +1,5 @@
 <script setup>
+import swal from 'sweetalert';
 import Navegacion from '../../components/Navegacion.vue'
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -24,7 +25,8 @@ async function obtenerIDCuenta() {
       datosUsuario.value.id_usuario = parseInt(data[0].id, 10) + 1
     })
     .catch(error => {
-      msg.value = "Error del servicio al obtener el último ID"
+      swal("Ups, algo salio mal", "Problemas internos con el servidor al obtener el último ID", "warning")
+      // msg.value = "Error del servicio al obtener el último ID"
     })
 }
 
@@ -36,15 +38,15 @@ async function verificarDatosCuenta() {
     .then(data => {
       //console.log(data)
       if (data.hasOwnProperty("error")) {
-        msg.value = data.error
-        //console.log("1 error")
+        swal("Ups, algo salio mal", data.error, "error")
+        msg.value = "error existen datos"
       } else {
         msg.value = ''
-        //console.log("2 error")
       }
     })
     .catch(error => {
-      msg.value = "v-Error del servicio al verificar los datos"
+      swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
+      // msg.value = "v-Error del servicio al verificar los datos"
     })
 }
 
@@ -57,7 +59,8 @@ async function guardarProductos() {
   isButtonDisabled.value = true
   //console.log(datosUsuario.value)
   if (datosUsuario.value.password != datosUsuario.value.password2) {
-    msg.value = "ERROR: Las contraseñas son distintas."
+    swal("Ups...", "Las contraseñas no coinciden", "error")
+    // msg.value = "ERROR: Las contraseñas son distintas."
     isButtonDisabled.value = false
     //console.log(msg.value)
     return;
@@ -68,7 +71,9 @@ async function guardarProductos() {
       msg.value += " " + clave + ","
   }
   if (msg.value) {
-    msg.value = "ERROR: Campos requeridos->" + msg.value
+    msg.value = ''
+    swal("Ups, algo salio mal", "Por favor, completa todos los campos requeridos", "warning")
+    // msg.value = "ERROR: Campos requeridos->" + msg.value
     isButtonDisabled.value = false
     //console.log(msg.value)
     return;
@@ -77,13 +82,10 @@ async function guardarProductos() {
   await verificarDatosCuenta()
   if (msg.value != '') {
     isButtonDisabled.value = false
-    //console.log("1t")
-
     return;
   } else {
-    //console.log("2t")
-    await obtenerIDCuenta();
     guardarDatos()
+    swal("", "Problemas internos con el servidor", "success")
   }
 
   isButtonDisabled.value = false
@@ -103,13 +105,16 @@ async function guardarDatos() {
     .then(data => {
       //console.log(data)
       if (data.hasOwnProperty("message")) {
-        msg.value = data.message
+        swal("", "Usuario registrado correctamente", "success")
+        // msg.value = data.message
         regresar()
       } else
-        msg.value = data.error
+        swal("Ups, algo salio mal", data.error, "warning")
+        // msg.value = data.error
     })
     .catch(error => {
-      msg.value = "Error del servicio al guardar los datos"
+      swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
+      // msg.value = "Error del servicio al guardar los datos"
     })
 }
 
@@ -137,13 +142,17 @@ async function guardarDatos() {
                         <input type="text" id="formId" class="form-control" v-model="datosUsuario.id_usuario" disabled />
                       </div>
                       <div class="mb-2">
-                        <label class="form-label" for="formCuentaU">Nombre de Usuario</label>
+                        <label class="form-label" for="formCuentaU">Nombre de Usuario
+                          <span style="color: red;">*</span>
+                        </label>
                         <input type="text" id="formCuentaU" class="form-control" v-model="datosUsuario.cuenta" />
                       </div>
                       <div class="row">
                         <div class="col-sm-6">
                           <div class="mb-2">
-                            <label class="form-label" >Contraseña</label>
+                            <label class="form-label">Contraseña
+                              <span style="color: red;">*</span>
+                            </label>
                             <div class="input-con-icono">
                               <input :type="showPw === true ? 'text' : 'password'" class="form-control"
                                 v-model="datosUsuario.password" />
@@ -155,10 +164,12 @@ async function guardarDatos() {
                         </div>
                         <div class="col-sm-6">
                           <div class="mb-2">
-                            <label class="form-label" >Repetir Contraseña</label>
+                            <label class="form-label">Repetir Contraseña
+                              <span style="color: red;">*</span>
+                            </label>
                             <div class="input-con-icono">
-                              <input :type="showPwD === true ? 'text' : 'password'" 
-                                class="form-control" v-model="datosUsuario.password2" />
+                              <input :type="showPwD === true ? 'text' : 'password'" class="form-control"
+                                v-model="datosUsuario.password2" />
                               <span class="icon-input" @click="showPwD = !showPwD">
                                 <font-awesome-icon class="password-icon" :icon="['fas', showPwD ? 'eye' : 'eye-slash']" />
                               </span>
@@ -196,13 +207,17 @@ async function guardarDatos() {
                     <fieldset>
                       <legend>Información personal</legend>
                       <div class="mb-2">
-                        <label class="form-label" for="formNombres">Nombres y apellidos</label>
+                        <label class="form-label" for="formNombres">Nombres y apellidos
+                          <span style="color: red;">*</span>
+                        </label>
                         <input type="text" id="formNombres" class="form-control" v-model="datosUsuario.nombres" />
                       </div>
                       <div class="row">
                         <div class="col-md-6">
                           <div class="mb-2">
-                            <label class="form-label" for="formDNI">DNI</label>
+                            <label class="form-label" for="formDNI">DNI
+                              <span style="color: red;">*</span>
+                            </label>
                             <input type="number" id="formDNI" class="form-control" v-model="datosUsuario.dni" />
                           </div>
                         </div>
@@ -226,9 +241,9 @@ async function guardarDatos() {
                 </div>
 
                 <div class="col-md-12">
-                  <div v-if="msg" class="form-outline px-4 text-center">
+                  <!-- <div v-if="msg" class="form-outline px-4 text-center">
                     <h5 class="text-black bg-info fw-bold p-2"> {{ msg }}</h5>
-                  </div>
+                  </div> -->
                   <div class="d-flex justify-content-center mt-3">
                     <button type="button" class="btn btn-primary mx-2" :disabled="isButtonDisabled"
                       @click="guardarProductos">Registrar</button>

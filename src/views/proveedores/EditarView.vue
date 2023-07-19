@@ -2,85 +2,88 @@
 import { useRoute, useRouter } from 'vue-router';
 import Navegacion from '../../components/Navegacion.vue'
 import { onMounted, ref } from 'vue';
+import swal from 'sweetalert';
 
 const router = useRouter()
 const params = useRoute()
 const isButtonDisabled = ref(false)
 const msg = ref('')
-const datosProveedor = ref({ "id_proveedor": "", "nombre": "", "ruc": "", "razon_social": "", "direccion": "", "estado": "", "fecha_registro": "", "comentario": ""})
+const datosProveedor = ref({ "id_proveedor": "", "nombre": "", "ruc": "", "razon_social": "", "direccion": "", "estado": "", "fecha_registro": "", "comentario": "" })
 
 onMounted(() => {
-    cargarData()
+  cargarData()
 })
 
-async function cargarData(){
-    const uId = params.params.id
-    await fetch(`${import.meta.env.VITE_API_V1}/proveedor/${uId}`, {
-        method: 'GET'
-    })
+async function cargarData() {
+  const uId = params.params.id
+  await fetch(`${import.meta.env.VITE_API_V1}/proveedor/${uId}`, {
+    method: 'GET'
+  })
     .then(response => response.json())
     .then(data => {
-        datosProveedor.value = data[0]
-        console.log(datosProveedor.value)
+      datosProveedor.value = data[0]
+      // console.log(datosProveedor.value)
     })
     .catch(error => {
-      msg.value = "Problemas con el servidor"
+      swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
+      // msg.value = "Problemas con el servidor"
     })
 }
 
 async function validarRUC() {
-    await fetch(`${import.meta.env.VITE_API_V1}/proveedor/comprobar?id_proveedor=${datosProveedor.value.id_proveedor}&ruc=${datosProveedor.value.ruc}`, {
-      method: 'GET'
+  await fetch(`${import.meta.env.VITE_API_V1}/proveedor/comprobar?id_proveedor=${datosProveedor.value.id_proveedor}&ruc=${datosProveedor.value.ruc}`, {
+    method: 'GET'
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.hasOwnProperty("error")) {
+        swal("Ups, algo salio mal", data.error, "error")
+        msg.value = data.error
+      } else {
+        msg.value = ''
+      }
     })
-      .then(response => response.json())
-      .then(data => {
-        //console.log(data)
-        if (data.hasOwnProperty("error")) {
-          msg.value = data.error
-          //console.log("1 error")
-        } else {
-          msg.value = ''
-          //console.log("2 error")
-        }
-      })
-      .catch(error => {
-        msg.value = "Error del servicio al verificar los datos"
-      })
+    .catch(error => {
+      swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
+      // msg.value = "Error del servicio al verificar los datos"
+    })
 }
 
 async function preUpdateProveedor() {
-  console.log(datosProveedor.value)
-    msg.value = ''
-    isButtonDisabled.value = true
-
-    if ((datosProveedor.value.ruc).toString().length != 11){
-        msg.value = 'El RUC debe contener 11 dígitos'
-        isButtonDisabled.value = false
-        return
-    } else{
-      await validarRUC()
-      if (msg.value != ''){
-          isButtonDisabled.value = false
-          return
-      }
-
-    }
-
-    for (var clave in datosProveedor.value) {
-        if (datosProveedor.value[clave] == '' && clave != "comentario" && clave != "razon_social" && clave != "direccion" ){
-            msg.value += " " + clave + ","
-        }
-    }
-    if (msg.value){
-        msg.value = "Error: campos requeridos -> " + msg.value
-        isButtonDisabled.value = false
-        return
-    } else {
-
-      await updateProveedor()
-      isButtonDisabled.value = false
+  // console.log(datosProveedor.value)
+  msg.value = ''
+  isButtonDisabled.value = true
+  
+  for (var clave in datosProveedor.value) {
+    if (datosProveedor.value[clave] == '' && clave != "comentario" && clave != "razon_social" && clave != "direccion") {
+      msg.value += " " + clave + ","
     }
   }
+  if (msg.value) {
+    msg.value = ''
+    swal("Ups, algo salio mal", "Por favor, completa todos los campos requeridos", "warning")
+    // msg.value = "Error: campos requeridos -> " + msg.value
+    isButtonDisabled.value = false
+    return
+  }
+
+  if ((datosProveedor.value.ruc).toString().length != 11) {
+    swal("Ups, algo salio mal", "El RUC debe contener 11 dígitos", "error")
+    // msg.value = 'El RUC debe contener 11 dígitos'
+    isButtonDisabled.value = false
+    return
+  } else {
+    await validarRUC()
+    if (msg.value != '') {
+      isButtonDisabled.value = false
+      return
+    }
+  }
+
+
+  await updateProveedor()
+  isButtonDisabled.value = false
+}
 
 async function updateProveedor() {
   await fetch(`${import.meta.env.VITE_API_V1}/proveedor`, {
@@ -89,32 +92,35 @@ async function updateProveedor() {
       "Content-type": "application/json"
     },
     body: JSON.stringify(datosProveedor.value)
-  })  
+  })
     .then(response => response.json())
     .then(data => {
       if (data.hasOwnProperty("message")) {
+        swal("", "Proveedor actualizado correctamente", "success")
         msg.value = data.message
         cancelar()
-      } else{
+      } else {
+        swal("Ups, algo salio mal", data.error, "error")
         msg.value = data.error
       }
     })
     .catch(error => {
-      msg.value = "Error del servicio al actualizar los datos"
+      swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
+      // msg.value = "Error del servicio al actualizar los datos"
     })
 }
 
 
-function cancelar(){
-    router.push({ name: 'proveedores' })
+function cancelar() {
+  router.push({ name: 'proveedores' })
 }
 
 </script>
 
 <template>
-    <Navegacion />
+  <Navegacion />
 
-    <div class="container__secondary">
+  <div class="container__secondary">
     <div class="vista-secondary">
       <div class="container__vista-principal">
         <div class="col-sm-12">
@@ -171,11 +177,8 @@ function cancelar(){
                 </div>
               </form>
               <div class="col-md-12">
-                <div v-if="msg" class="alert alert-danger" role="alert">
+                <!-- <div v-if="msg" class="alert alert-danger" role="alert">
                   {{ msg }}
-                </div>
-                <!-- <div v-if="msg" class="form-outline px-4 text-center">
-                  <h5 class="text-black bg-info fw-bold p-2"> {{ msg }}</h5>
                 </div> -->
                 <div class="d-flex justify-content-center mt-3">
                   <button type="button" class="btn btn-primary mx-2" :disabled="isButtonDisabled"

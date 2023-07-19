@@ -2,6 +2,7 @@
 import { useRouter, useRoute } from 'vue-router';
 import Navegacion from '../../components/Navegacion.vue'
 import { onMounted, ref } from 'vue';
+import swal from 'sweetalert';
 
 const router = useRouter()
 const dataUsuarios = ref('')
@@ -23,17 +24,33 @@ async function cargarData() {
 }
 
 async function deshabilitarUsuario(idUser, estado) {
-  await fetch(`${import.meta.env.VITE_API_V1}/usuario/${idUser}`, {
-    method: 'PATCH',
-    headers: {
-      "Content-type": "application/json"
-    },
-    body: JSON.stringify({ "estado": `${estado}` })
+  const deshabilitar = await swal({
+    title: "Estas seguro?",
+    // text: "El usuario deshabilitado ya no podrá ingresar al sistema!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
   })
-    .then(response => response.json())
-    .then(data => {
-      cargarData()
+
+  if (deshabilitar) {
+    await fetch(`${import.meta.env.VITE_API_V1}/usuario/${idUser}`, {
+      method: 'PATCH',
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({ "estado": `${estado}` })
     })
+      .then(response => response.json())
+      .then(data => {
+        swal("", "El usuario ha sido deshabilitado!", "success")
+        cargarData()
+      })
+      .catch(error => {
+        swal("Ups, algo salio mal", "Problemas internos con el servidor", "warning")
+      })
+  } else {
+    return
+  }
 }
 
 function buscarUsuarios() {
