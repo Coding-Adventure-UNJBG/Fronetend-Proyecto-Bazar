@@ -81,9 +81,20 @@ function buscarProducto() {
 }
 
 function seleccionarProducto(producto) {
-  showResults.value = false
-  productoSeccionado.value = producto
-  totalStock.value = producto.stock
+
+  const existeProducto = detalleProducto.value.some(detalle => detalle.id_producto == producto.id_producto);
+  // console.log(existeProducto); // Resultado: true (si existe) o false (si no existe)
+
+  if (existeProducto) {
+    swal("Ups, algo salio mal", "El producto seleccionado ya se encuentra registrado", "warning")
+    return
+  } else {
+    showResults.value = false
+    productoSeccionado.value = producto
+    totalStock.value = producto.stock
+  }
+
+
 }
 
 function agregarCarrito() {

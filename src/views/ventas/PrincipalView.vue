@@ -5,10 +5,24 @@ import { ref, onMounted } from 'vue';
 
 const router = useRouter()
 const dataVenta = ref('')
+// const fechaActual = new Date()
+// const fechaFormateada = ref('')
 
 onMounted(() => {
+  // obtenerFecha()
   cargarData()
 })
+
+// function obtenerFecha() {
+//   const fechaActual = new Date();
+
+//   const dia = String(fechaActual.getDate()).padStart(2, '0')
+//   const mes = String(fechaActual.getMonth() + 1).padStart(2, '0')
+//   const anio = fechaActual.getFullYear();
+
+//   fechaFormateada.value = `${anio}-${mes}-${dia}`;
+//   console.log(fechaFormateada.value)
+// }
 
 async function cargarData() {
   await fetch(`${import.meta.env.VITE_API_V1}/venta`, {
@@ -38,7 +52,7 @@ function nuevaVenta() {
   <div class="container__principal">
     <div class="vista-principal">
       <div class="text__principal">
-        <h1>VENTAS DEL DIA</h1>
+        <h1>VISTA DE VENTAS</h1>
       </div>
       <div class="container__vista-principal">
         <div class="col-sm-12">
@@ -50,14 +64,14 @@ function nuevaVenta() {
                   <button type="button" class="btn btn-primary" @click="nuevaVenta">Nueva Venta</button>
                 </div>
 
-                <div class="col-md-3">
+                <!-- <div class="col-md-3">
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text ventas__fecha">FECHA</span>
                     </div>
-                    <input type="date" class="form-control">
+                    <input type="date" class="form-control" :value="fechaFormateada">
                   </div>
-                </div>
+                </div> -->
 
               </div>
             </div>
@@ -100,28 +114,6 @@ function nuevaVenta() {
                   </tbody>
                 </table>
               </div>
-
-              <!-- <div class="row">
-                <div class="col-md-4 d-flex justify-content-center justify-content-md-start">
-                  <div class="input-group mb-2 mt-3 compact-input justify-content-start">
-                    <span class="input-group-text compact-span">Total de Ventas</span>
-                    <input type="text" class="form-control text-end" disabled value="124">
-                  </div>
-                </div>
-                <div class="col-md-4 d-flex justify-content-center">
-                  <div class="input-group mb-2 mt-3 compact-input justify-content-center">
-                    <span class="input-group-text compact-span">Unidades Vendidas</span>
-                    <input type="text" class="form-control text-end" disabled value="50">
-                  </div>
-                </div>
-                <div class="col-md-4 d-flex justify-content-center justify-content-md-end">
-                  <div class="input-group mb-2 mt-3 compact-input justify-content-end">
-                    <span class="input-group-text compact-span">Total Monetario S/.</span>
-                    <input type="text" class="form-control text-end" disabled value="1000">
-                  </div>
-                </div>
-              </div> -->
-
             </div>
           </div>
         </div>
